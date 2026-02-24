@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>Hetal — Join the Team</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #08112A;
+      --surface:  #0e1e3d;
+      --card:     #132044;
+      --border:   #1e3060;
+      --amber:    #495e90;
+      --amber-dim:#26417b;
+      --amber-bg: #0e1a35;
+      --green:    #6c7ca6;
+      --green-bg: #0e1a35;
+      --red:      #c0392b;
+      --red-bg:   #1e0c0a;
+      --blue:     #909abc;
+      --text:     #eaeaea;
+      --muted:    #6c7ca6;
+      --soft:     #909abc;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow: hidden;
+    }
+
+    /* ── CONTAINER ── */
+    .app {
+      height: 100dvh;
+      max-width: 430px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── PROGRESS BAR ── */
+    .progress-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--border);
+      z-index: 100;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #495e90;
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 0 2px 2px 0;
+    }
+
+    /* ── SCREENS ── */
+    .screen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      opacity: 0;
+      transform: translateX(100%);
+      transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .screen.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: all;
+    }
+
+    .screen.exit {
+      opacity: 0;
+      transform: translateX(-60px);
+    }
+
+    /* ── SCREEN 1: HOOK ── */
+    #screen1 {
+      background: var(--bg);
+      justify-content: flex-end;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(73,94,144,0.18) 0%, transparent 70%);
+      top: -100px; left: -100px;
+      animation: drift 8s ease-in-out infinite alternate;
+    }
+
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(144,154,188,0.08) 0%, transparent 70%);
+      bottom: 100px; right: -100px;
+      animation: drift 10s ease-in-out infinite alternate-reverse;
+    }
+
+    @keyframes drift {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(30px, 20px) scale(1.1); }
+    }
+
+    .store-visual {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 55%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 100px;
+      filter: drop-shadow(0 20px 60px rgba(245,166,35,0.2));
+    }
+
+    .store-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 20px;
+      opacity: 0.15;
+      position: absolute;
+      inset: 0;
+      align-content: center;
+    }
+
+    .store-tile {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      height: 60px;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    .store-tile:nth-child(2) { animation-delay: 0.3s; }
+    .store-tile:nth-child(3) { animation-delay: 0.6s; }
+    .store-tile:nth-child(4) { animation-delay: 0.2s; }
+    .store-tile:nth-child(5) { animation-delay: 0.5s; }
+    .store-tile:nth-child(6) { animation-delay: 0.8s; }
+
+    @keyframes shimmer {
+      0%, 100% { opacity: 0.3; }
+      50%       { opacity: 0.7; }
+    }
+
+    .hook-content {
+      position: relative;
+      background: linear-gradient(to top, var(--bg) 70%, transparent);
+      padding: 48px 28px 36px;
+      z-index: 10;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #0e1a35;
+      border: 1px solid #26417b;
+      color: #909abc;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 20px;
+    }
+
+    .badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #909abc;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    h1.display {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    h1.display em {
+      color: var(--amber);
+      font-style: italic;
+    }
+
+    .hook-sub {
+      font-size: 16px;
+      color: var(--soft);
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    /* ── BUTTONS ── */
+    .btn-primary {
+      display: block;
+      width: 100%;
+      background: #26417b;
+      color: #eaeaea;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 17px 24px;
+      border-radius: 16px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+      letter-spacing: -0.01em;
+    }
+
+    .btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    .btn-primary:active { transform: scale(0.98); }
+
+    .btn-ghost {
+      display: block;
+      width: 100%;
+      background: transparent;
+      color: var(--muted);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 14px 24px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .btn-ghost:hover { border-color: var(--muted); color: var(--text); }
+
+    /* ── SCREEN CONTENT LAYOUT ── */
+    .screen-inner {
+      flex: 1;
+      padding: 56px 28px 32px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screen-header {
+      margin-bottom: 32px;
+    }
+
+    .step-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 12px;
+    }
+
+    h2.title {
+      font-family: 'Playfair Display', serif;
+      font-size: 30px;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    h2.title em { color: var(--amber); font-style: italic; }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--soft);
+      line-height: 1.6;
+    }
+
+    /* ── SCREEN 2: HOW IT WORKS ── */
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 28px;
+      flex: 1;
+    }
+
+    .step-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .step-card:nth-child(2) { animation-delay: 0.1s; }
+    .step-card:nth-child(3) { animation-delay: 0.2s; }
+    .step-card:nth-child(4) { animation-delay: 0.3s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-num {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: #0e1a35;
+      border: 1px solid #26417b;
+      color: #909abc;
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-text strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+
+    .step-text span {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .earnings-card {
+      background: #0e1a35;
+      border: 1px solid #26417b;
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .earnings-icon { font-size: 28px; }
+
+    .earnings-text strong {
+      display: block;
+      font-size: 20px;
+      font-weight: 700;
+      color: #909abc;
+    }
+
+    .earnings-text span {
+      font-size: 13px;
+      color: #495e90;
+    }
+
+    /* ── HURDLE SCREENS ── */
+    .hurdle-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--soft);
+      margin-bottom: 10px;
+      letter-spacing: 0.02em;
+    }
+
+    .text-input {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 18px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+      outline: none;
+      letter-spacing: 0.08em;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      text-align: center;
+    }
+
+    .text-input:focus {
+      border-color: #495e90;
+      box-shadow: 0 0 0 3px rgba(73,94,144,0.15);
+    }
+
+    .text-input::placeholder {
+      color: var(--border);
+      letter-spacing: 0.08em;
+    }
+
+    .checking-state {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid var(--border);
+      border-top-color: var(--amber);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .result-pass {
+      background: #0e1a35;
+      border: 1px solid #495e90;
+      border-radius: 14px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #909abc;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .result-fail {
+      background: var(--red-bg);
+      border: 1px solid var(--red);
+      border-radius: 14px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--red);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    /* ── TRANSPORT OPTIONS ── */
+    .transport-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .transport-opt {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .transport-opt:hover { border-color: var(--amber-dim); }
+
+    .transport-opt.selected {
+      border-color: #495e90;
+      background: #0e1a35;
+    }
+
+    .transport-opt .opt-icon {
+      font-size: 28px;
+      width: 44px;
+      text-align: center;
+    }
+
+    .opt-info strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .opt-info span {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .opt-check {
+      margin-left: auto;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .transport-opt.selected .opt-check {
+      background: #495e90;
+      border-color: #495e90;
+    }
+
+    .opt-check::after {
+      content: '✓';
+      font-size: 12px;
+      font-weight: 700;
+      color: #0E0E12;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .transport-opt.selected .opt-check::after { opacity: 1; }
+
+    /* ── SCREEN 5: CHAT ── */
+    #screen5 {
+      background: var(--bg);
+    }
+
+    .chat-header {
+      padding: 20px 20px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .chat-avatar {
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #495e90, #26417b);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .chat-info strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .chat-info span {
+      font-size: 12px;
+      color: #909abc;
+      font-weight: 500;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .chat-bubble {
+      max-width: 85%;
+      padding: 12px 15px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.6;
+      animation: fadeUp 0.3s ease both;
+    }
+
+    .chat-bubble.bot {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 4px;
+      align-self: flex-start;
+      color: var(--text);
+    }
+
+    .chat-bubble.user {
+      background: #26417b;
+      color: #eaeaea;
+      border-bottom-right-radius: 4px;
+      align-self: flex-end;
+      font-weight: 500;
+    }
+
+    .chat-typing {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      border-bottom-left-radius: 4px;
+      padding: 14px 16px;
+      display: flex;
+      gap: 5px;
+      align-self: flex-start;
+    }
+
+    .chat-typing span {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--muted);
+      animation: bounce 1.2s infinite;
+    }
+
+    .chat-typing span:nth-child(2) { animation-delay: 0.15s; }
+    .chat-typing span:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); }
+      40%            { transform: translateY(-6px); }
+    }
+
+    .chat-quick-replies {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 8px 16px;
+      flex-shrink: 0;
+    }
+
+    .quick-reply {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--soft);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12.5px;
+      font-weight: 500;
+      padding: 7px 14px;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .quick-reply:hover {
+      border-color: #495e90;
+      color: #909abc;
+    }
+
+    .chat-input-row {
+      padding: 10px 14px 16px;
+      display: flex;
+      gap: 10px;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .chat-text-input {
+      flex: 1;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      resize: none;
+      transition: border-color 0.2s;
+      max-height: 80px;
+    }
+
+    .chat-text-input:focus { border-color: var(--amber); }
+    .chat-text-input::placeholder { color: var(--muted); }
+
+    .chat-send {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      background: #26417b;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      align-self: flex-end;
+      transition: all 0.2s;
+      color: #eaeaea;
+    }
+
+    .chat-send:hover { filter: brightness(1.1); }
+    .chat-send:disabled { background: var(--border); cursor: not-allowed; }
+
+    .skip-chat {
+      text-align: center;
+      padding: 0 16px 6px;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      flex-shrink: 0;
+    }
+
+    .skip-chat:hover { color: var(--soft); }
+
+    /* ── SCREEN 6: SUCCESS ── */
+    #screen6 {
+      background: var(--bg);
+    }
+
+    .success-inner {
+      flex: 1;
+      padding: 60px 28px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .success-icon {
+      width: 90px; height: 90px;
+      border-radius: 24px;
+      background: var(--amber-bg);
+      border: 1px solid var(--amber-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 44px;
+      margin-bottom: 28px;
+      animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.5); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
+    .success-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 34px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 14px;
+      line-height: 1.2;
+    }
+
+    .success-sub {
+      font-size: 15px;
+      color: var(--soft);
+      line-height: 1.65;
+      margin-bottom: 36px;
+      max-width: 300px;
+    }
+
+    .perks-list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 36px;
+    }
+
+    .perk {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-align: left;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .perk:nth-child(2) { animation-delay: 0.1s; }
+    .perk:nth-child(3) { animation-delay: 0.2s; }
+
+    .perk-icon { font-size: 22px; }
+
+    .perk-text strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .perk-text span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ── WAITLIST SCREEN ── */
+    #screenWaitlist {
+      background: var(--bg);
+    }
+
+    .waitlist-inner {
+      flex: 1;
+      padding: 60px 28px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .waitlist-icon {
+      font-size: 60px;
+      margin-bottom: 24px;
+      animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    .email-input {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 18px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .email-input:focus { border-color: var(--amber); box-shadow: 0 0 0 3px rgba(245,166,35,0.12); }
+    .email-input::placeholder { color: var(--muted); }
+
+    /* ── TAPPABLE STEPS ── */
+    .tappable-step {
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .tappable-step:active {
+      transform: scale(0.98);
+    }
+
+    .tappable-step.confirmed {
+      border-color: #2ECC71;
+      background: #0a2018;
+    }
+
+    .tappable-step.confirmed .step-num {
+      background: #2ECC71;
+      border-color: #2ECC71;
+      color: #0a2018;
+      font-size: 18px;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .tappable-step.confirmed .step-tap-hint {
+      color: #2ECC71;
+    }
+
+    .step-tap-hint {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-left: auto;
+      flex-shrink: 0;
+      align-self: center;
+      transition: color 0.2s;
+    }
+
+    /* ── BACK BUTTON ── */
+    .back-btn {
+      position: absolute;
+      top: 16px;
+      left: 20px;
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 50;
+      color: var(--soft);
+      transition: all 0.2s;
+      font-size: 16px;
+    }
+
+    .back-btn:hover { border-color: var(--muted); color: var(--text); }
+
+    /* ── FOOTER NOTE ── */
+    .footer-note {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      padding: 12px 28px 20px;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- PROGRESS -->
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+  <!-- ════════════════════════════════════════════
+       SCREEN 1 — HOOK
+  ════════════════════════════════════════════ -->
+  <div class="screen active" id="screen1">
+    <div class="hero-bg">
+      <div class="store-grid">
+        <div class="store-tile"></div><div class="store-tile"></div><div class="store-tile"></div>
+        <div class="store-tile"></div><div class="store-tile"></div><div class="store-tile"></div>
+        <div class="store-tile"></div><div class="store-tile"></div><div class="store-tile"></div>
+      </div>
+    </div>
+    <div class="store-visual" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:36px;font-weight:700;letter-spacing:0.15em;color:#909abc;text-shadow:0 20px 60px rgba(73,94,144,0.4);">HETAL RETAIL</div>
+    <div class="hook-content">
+      <div class="badge"><div class="badge-dot"></div> Now hiring in your area</div>
+      <h1 class="display">Get paid to film <em>store shelves.</em></h1>
+      <p class="hook-sub">Flexible gig work. No deliveries. No purchases. Just film aisles at nearby stores and earn — on your own schedule.</p>
+      <button class="btn-primary" onclick="goTo(2)">See if I qualify →</button>
+      <p class="footer-note" style="padding:12px 0 0; color: #555">Takes 2 minutes · No commitment</p>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       SCREEN 2 — HOW IT WORKS
+  ════════════════════════════════════════════ -->
+  <div class="screen" id="screen2">
+    <button class="back-btn" onclick="goTo(1)">←</button>
+    <div class="screen-inner">
+      <div class="screen-header">
+        <div class="step-label">How it works</div>
+        <h2 class="title">Simple work.<br><em>Real money.</em></h2>
+        <p class="subtitle">Hetal pays you to visit stores and film product aisles. That's it.</p>
+      </div>
+
+      <p class="steps-hint" id="stepsHint" style="font-size:13px;color:var(--muted);margin-bottom:14px;transition:color 0.3s;">
+        Tap each step to confirm you've read it
+      </p>
+
+      <div class="steps-list">
+        <div class="step-card tappable-step" id="step-1" onclick="tapStep(1)">
+          <div class="step-num" id="step-num-1">1</div>
+          <div class="step-text">
+            <strong>Reserve an assignment</strong>
+            <span>New store assignments drop every Monday morning, first come first served.</span>
+          </div>
+          <div class="step-tap-hint">Tap to confirm</div>
+        </div>
+        <div class="step-card tappable-step" id="step-2" onclick="tapStep(2)">
+          <div class="step-num" id="step-num-2">2</div>
+          <div class="step-text">
+            <strong>Visit the store & film</strong>
+            <span>Walk the assigned aisles, film clearly and slowly. Takes 15–25 mins.</span>
+          </div>
+          <div class="step-tap-hint">Tap to confirm</div>
+        </div>
+        <div class="step-card tappable-step" id="step-3" onclick="tapStep(3)">
+          <div class="step-num" id="step-num-3">3</div>
+          <div class="step-text">
+            <strong>Upload & get paid</strong>
+            <span>Upload on Wi-Fi at home. Get paid within 1–3 days once approved.</span>
+          </div>
+          <div class="step-tap-hint">Tap to confirm</div>
+        </div>
+      </div>
+
+      <div class="earnings-card">
+        <div class="earnings-icon">💰</div>
+        <div class="earnings-text">
+          <strong>$40–60 / hour</strong>
+          <span>Experienced users hit 4+ stores per hour · No experience needed to start</span>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="screen2NextBtn" onclick="goTo(3)" disabled style="opacity:0.35;cursor:not-allowed;">
+        Check my area →
+      </button>
+      <p id="screen2BtnHint" style="text-align:center;font-size:12px;color:var(--muted);margin-top:10px;">
+        Tap all 3 steps to continue
+      </p>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       SCREEN 3 — HURDLE 1: ZIP CODE
+  ════════════════════════════════════════════ -->
+  <div class="screen" id="screen3">
+    <button class="back-btn" onclick="goTo(2)">←</button>
+    <div class="screen-inner">
+      <div class="screen-header">
+        <div class="step-label">Step 1 of 2</div>
+        <h2 class="title">What's your <em>zip code?</em></h2>
+        <p class="subtitle">We'll check if we have open assignments in your area.</p>
+      </div>
+
+      <div class="hurdle-body">
+        <div class="input-group">
+          <label class="input-label">Enter your zip code</label>
+          <input class="text-input" id="zipInput" type="tel" maxlength="5" placeholder="00000"
+            oninput="onZipInput(this)" />
+        </div>
+        <div id="zipResult" style="margin-bottom: 20px; display:none;"></div>
+      </div>
+
+      <button class="btn-primary" id="zipNextBtn" disabled onclick="handleZipNext()" style="opacity:0.4">
+        Check availability →
+      </button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       SCREEN 4 — HURDLE 2: TRANSPORTATION
+  ════════════════════════════════════════════ -->
+  <div class="screen" id="screen4">
+    <button class="back-btn" onclick="goTo(3)">←</button>
+    <div class="screen-inner">
+      <div class="screen-header">
+        <div class="step-label">Step 2 of 2</div>
+        <h2 class="title">How do you get <em>around?</em></h2>
+        <p class="subtitle">You'll need a reliable way to reach nearby stores — usually within 5–10 miles.</p>
+      </div>
+
+      <div class="hurdle-body">
+        <div class="transport-options" id="transportOptions">
+          <div class="transport-opt" onclick="selectTransport(this, 'yes')" data-value="yes">
+            <div class="opt-icon">🚗</div>
+            <div class="opt-info">
+              <strong>I have a car</strong>
+              <span>Drive to stores whenever works for me</span>
+            </div>
+            <div class="opt-check"></div>
+          </div>
+          <div class="transport-opt" onclick="selectTransport(this, 'yes')" data-value="yes">
+            <div class="opt-icon">🚌</div>
+            <div class="opt-info">
+              <strong>Public transit / rideshare</strong>
+              <span>Bus, subway, Uber, or Lyft</span>
+            </div>
+            <div class="opt-check"></div>
+          </div>
+          <div class="transport-opt" onclick="selectTransport(this, 'yes')" data-value="yes">
+            <div class="opt-icon">🚲</div>
+            <div class="opt-info">
+              <strong>Bike or walk</strong>
+              <span>Stores are nearby and accessible</span>
+            </div>
+            <div class="opt-check"></div>
+          </div>
+          <div class="transport-opt" onclick="selectTransport(this, 'no')" data-value="no">
+            <div class="opt-icon">❌</div>
+            <div class="opt-info">
+              <strong>I don't have a reliable way</strong>
+              <span>Getting to stores would be difficult</span>
+            </div>
+            <div class="opt-check"></div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="transportNextBtn" disabled onclick="handleTransportNext()" style="opacity:0.4">
+        Continue →
+      </button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       SCREEN 5 — FAQ CHAT
+  ════════════════════════════════════════════ -->
+  <div class="screen" id="screen5" style="display:flex; flex-direction:column;">
+    <div class="chat-header">
+      <div class="chat-avatar" style="background:linear-gradient(135deg,#495e90,#26417b);font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.05em;color:#eaeaea;">HR</div>
+      <div class="chat-info">
+        <strong>Hetal Support</strong>
+        <span>● Online · Ask anything</span>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages"></div>
+
+    <div class="chat-input-row">
+      <textarea class="chat-text-input" id="chatInput" rows="1" placeholder="Type your answer…"
+        onkeydown="handleChatKey(event)" oninput="autoResizeChat(this)"></textarea>
+      <button class="chat-send" id="chatSendBtn" onclick="sendChatMessage()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       SCREEN 6 — SUCCESS / DOWNLOAD
+  ════════════════════════════════════════════ -->
+  <div class="screen" id="screen6">
+    <div class="success-inner">
+      <div class="success-icon" style="background:linear-gradient(135deg,#132044,#26417b);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.08em;color:#909abc;">HR</div>
+      <h2 class="success-title">You're in.<br>Let's get started.</h2>
+      <p class="success-sub">You're a great fit for Hetal. Download the app, claim your first assignment, and get paid.</p>
+
+      <div class="perks-list">
+        <div class="perk">
+          <div class="perk-icon">📅</div>
+          <div class="perk-text">
+            <strong>Assignments drop Monday mornings</strong>
+            <span>Reserve yours first thing — they go fast</span>
+          </div>
+        </div>
+        <div class="perk">
+          <div class="perk-icon">💰</div>
+          <div class="perk-text">
+            <strong>Your trial assignment pays $10</strong>
+            <span>Complete it to unlock the full assignment pool</span>
+          </div>
+        </div>
+        <div class="perk">
+          <div class="perk-icon">📶</div>
+          <div class="perk-text">
+            <strong>Upload on Wi-Fi at home</strong>
+            <span>Film at the store, upload later — no rush</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="alert('📱 This would open the App Store or Google Play in production!')">
+        Download the Hetal App →
+      </button>
+      <button class="btn-ghost" onclick="goTo(5)">← Back to questions</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       WAITLIST SCREEN
+  ════════════════════════════════════════════ -->
+  <div class="screen" id="screenWaitlist">
+    <div class="waitlist-inner">
+      <div class="waitlist-icon">📍</div>
+      <h2 class="success-title" style="font-size:28px; margin-bottom:12px;">Not in your area yet.</h2>
+      <p class="success-sub">We're expanding quickly. Drop your email and we'll notify you the moment work opens up near you.</p>
+
+      <input class="email-input" id="waitlistEmail" type="email" placeholder="your@email.com" />
+      <button class="btn-primary" style="width:100%;" onclick="joinWaitlist()">Notify me when you're here →</button>
+      <div id="waitlistConfirm" style="display:none; margin-top:16px;">
+        <div class="result-pass" style="justify-content:center;">
+          ✓ &nbsp; You're on the list — we'll be in touch!
+        </div>
+      </div>
+
+      <p style="margin-top: 24px; font-size:13px; color:var(--muted); cursor:pointer; text-decoration:underline; text-underline-offset:3px;" onclick="goTo(1)">
+        ← Start over with a different zip code
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── TAPPABLE STEPS ────────────────────────────────────────────────────────
+const stepsConfirmed = new Set();
+
+function tapStep(n) {
+  if (stepsConfirmed.has(n)) return; // already tapped, do nothing
+  stepsConfirmed.add(n);
+
+  const card = document.getElementById(`step-${n}`);
+  const num  = document.getElementById(`step-num-${n}`);
+
+  card.classList.add('confirmed');
+  num.textContent = '✓';
+
+  const hint = card.querySelector('.step-tap-hint');
+  if (hint) hint.textContent = 'Got it!';
+
+  // Check if all 3 confirmed
+  if (stepsConfirmed.size === 3) {
+    const btn     = document.getElementById('screen2NextBtn');
+    const btnHint = document.getElementById('screen2BtnHint');
+    const topHint = document.getElementById('stepsHint');
+
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.cursor  = 'pointer';
+    btnHint.textContent = "You're ready — let's check your area!";
+    btnHint.style.color = '#2ECC71';
+    topHint.textContent = '✓ All steps confirmed';
+    topHint.style.color = '#2ECC71';
+  }
+}
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let currentScreen = 'screen1';
+let transportChoice = null;
+let zipPassed = false;
+let chatHistory = [];
+let chatLoading = false;
+
+const PROGRESS = {
+  screen1: 0, screen2: 20, screen3: 40,
+  screen4: 60, screen5: 80, screen6: 100, screenWaitlist: 0
+};
+
+const FAQ_SYSTEM = `You are a friendly, concise support assistant for Hetal — a gig-economy mobile app where workers visit stores and film product aisles to earn money. You're embedded in a pre-download onboarding flow, so the person hasn't downloaded the app yet.
+
+Answer questions warmly and honestly using this knowledge:
+
+HOW IT WORKS: Visit stores (Walmart, Target, Sprouts etc), film assigned aisles slowly/clearly, upload videos via app. No purchases or deliveries. Payment in 1-3 days after approval.
+
+PAY: Based on number of aisles per assignment. Trial = $10. Experienced users do 4+ stores/hour = $40-60/hr. Pay shown in green box in app.
+
+SCHEDULING: Assignments released Monday mornings, first come first served. Complete by Sunday. Trial assignment = 7 days. Start with 3 reservations/week, increases with reliability.
+
+RECORDING: Film full aisles not just products. Move slowly. If item missing - film the aisle anyway, Hetal won't reject for 1-2 missing items. Already left store? Submit a 1-2 second placeholder video.
+
+UPLOADS: Use Wi-Fi not cellular. Upload each aisle individually. If stops mid-way, check which completed and retry rest.
+
+EMPLOYMENT: 1099 independent contractor. No W-2 or full-time available. No interview needed - just download and complete first assignment.
+
+Keep answers to 2-4 sentences. Be direct and encouraging. If you don't know something, say so and suggest they ask after downloading the app.`;
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────
+function goTo(screenNum) {
+  const id = screenNum === 'waitlist' ? 'screenWaitlist' : `screen${screenNum}`;
+  const current = document.getElementById(currentScreen);
+  const next = document.getElementById(id);
+
+  if (!next || id === currentScreen) return;
+
+  current.classList.add('exit');
+  setTimeout(() => {
+    current.classList.remove('active', 'exit');
+    next.classList.add('active');
+    currentScreen = id;
+    document.getElementById('progressFill').style.width = (PROGRESS[id] || 0) + '%';
+
+    // Init chat on screen 5
+    if (id === 'screen5' && chatHistory.length === 0) initChat();
+  }, 300);
+}
+
+// ── ZIP CODE HURDLE ───────────────────────────────────────────────────────
+function onZipInput(el) {
+  const val = el.value.replace(/\D/g, '');
+  el.value = val;
+  const btn = document.getElementById('zipNextBtn');
+  if (val.length === 5) {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+  } else {
+    btn.disabled = true;
+    btn.style.opacity = '0.4';
+  }
+}
+
+function handleZipNext() {
+  const zip = document.getElementById('zipInput').value;
+  const btn = document.getElementById('zipNextBtn');
+  const resultEl = document.getElementById('zipResult');
+
+  btn.textContent = 'Checking…';
+  btn.disabled = true;
+
+  // Show checking state
+  resultEl.style.display = 'block';
+  resultEl.innerHTML = `<div class="checking-state"><div class="spinner"></div> Checking coverage for ${zip}…</div>`;
+
+  // 50% randomization
+  setTimeout(() => {
+    zipPassed = Math.random() > 0.5;
+
+    if (zipPassed) {
+      resultEl.innerHTML = `<div class="result-pass">✓ &nbsp; Great news — we have open assignments near ${zip}!</div>`;
+      btn.textContent = 'Continue →';
+      btn.disabled = false;
+      btn.onclick = () => goTo(4);
+    } else {
+      resultEl.innerHTML = `<div class="result-fail">✗ &nbsp; We don't have assignments in ${zip} yet.</div>`;
+      btn.textContent = 'Join the waitlist →';
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.onclick = () => goTo('waitlist');
+    }
+  }, 1400);
+}
+
+// ── TRANSPORT HURDLE ──────────────────────────────────────────────────────
+function selectTransport(el, value) {
+  document.querySelectorAll('.transport-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  transportChoice = value;
+
+  const btn = document.getElementById('transportNextBtn');
+  btn.disabled = false;
+  btn.style.opacity = '1';
+}
+
+function handleTransportNext() {
+  if (transportChoice === 'no') {
+    goTo('waitlist');
+  } else {
+    goTo(5);
+  }
+}
+
+// ── CHAT ──────────────────────────────────────────────────────────────────
+
+const QUESTIONS = [
+  {
+    id: 1,
+    ask: "Hey! 👋 Just a few quick questions to make sure Hetal is a good fit for you.\n\nFirst up: **Hetal is 1099 contract work** — similar to Uber, DoorDash, or Instacart. You're an independent contractor, not an employee. No guaranteed hours, no W-2.\n\nAre you comfortable with that?",
+    topic: "1099"
+  },
+  {
+    id: 2,
+    ask: "Got it, great!\n\nNext: **your first assignment pays $10.** Experienced Hetalites earn $40–60/hr by completing multiple stores in one outing — but that takes a little time to build up to.\n\nDoes that pay structure work for you?",
+    topic: "pay"
+  },
+  {
+    id: 3,
+    ask: "Perfect.\n\n**When you reserve an assignment, no one else can take it.** If you don't complete it, your access to future assignments gets reduced. We rely on people showing up when they commit.\n\nAre you comfortable with that responsibility?",
+    topic: "reliability"
+  },
+  {
+    id: 4,
+    ask: "Almost there!\n\nLast one: **you film at the store, but upload videos over Wi-Fi at home** — not on cellular data. So you'd need to be okay with a two-step process: film in-store, upload later.\n\nDoes that work for you?",
+    topic: "wifi"
+  }
+];
+
+const AFFIRMATIVE_KEYWORDS = ['yes','yeah','yep','yup','sure','ok','okay','absolutely','definitely','sounds good','works','fine','of course','totally','100','agreed','agree','cool','great','perfect','i am','i do','i can','i will','no problem','no worries','understand','understood'];
+
+
+
+let questionIndex = 0;
+let qualificationDone = false;
+let freeChat = false;
+
+function initChat() {
+  setTimeout(() => askQuestion(0), 400);
+}
+
+function askQuestion(idx) {
+  if (idx >= QUESTIONS.length) return;
+  questionIndex = idx;
+  const q = QUESTIONS[idx];
+  showTyping();
+  setTimeout(() => {
+    removeTyping();
+    appendBotBubble(q.ask);
+  }, 800);
+}
+
+function isAffirmative(text) {
+  const lower = text.toLowerCase().trim();
+  return AFFIRMATIVE_KEYWORDS.some(kw => lower.includes(kw));
+}
+
+function appendBotBubble(text) {
+  const area = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-bubble bot';
+  div.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+  area.appendChild(div);
+  scrollChat();
+}
+
+function appendUserBubble(text) {
+  const area = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-bubble user';
+  div.textContent = text;
+  area.appendChild(div);
+  scrollChat();
+}
+
+function appendDownloadBanner() {
+  const area = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.style.cssText = 'align-self:stretch;background:linear-gradient(135deg,#132044,#26417b);border-radius:16px;padding:20px;margin:8px 0;text-align:center;';
+  div.innerHTML = `
+    <div style="font-size:22px;margin-bottom:8px;">🎉</div>
+    <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;color:#eaeaea;margin-bottom:6px;">Fantastic! You're qualified to become a Hetalite.</div>
+    <div style="font-size:13px;color:#909abc;margin-bottom:16px;">We'd love for you to download the app and create your account.</div>
+    <a href="https://hetalretail.onelink.me/sfUI/7wytu71w" target="_blank" style="display:inline-block;background:#495e90;color:#eaeaea;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;padding:12px 28px;border-radius:100px;text-decoration:none;letter-spacing:0.02em;">Download Hetal Retail →</a>
+  `;
+  area.appendChild(div);
+  scrollChat();
+}
+
+function showTyping() {
+  const area = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-typing';
+  div.id = 'typingIndicator';
+  div.innerHTML = '<span></span><span></span><span></span>';
+  area.appendChild(div);
+  scrollChat();
+}
+
+function removeTyping() {
+  const el = document.getElementById('typingIndicator');
+  if (el) el.remove();
+}
+
+function scrollChat() {
+  const area = document.getElementById('chatMessages');
+  setTimeout(() => area.scrollTop = area.scrollHeight, 60);
+}
+
+async function sendChatMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text || chatLoading) return;
+
+  input.value = '';
+  autoResizeChat(input);
+  appendUserBubble(text);
+
+  // ── FREE CHAT MODE (after qualification) ──
+  if (freeChat) {
+    chatLoading = true;
+    document.getElementById('chatSendBtn').disabled = true;
+    chatHistory.push({ role: 'user', content: text });
+    showTyping();
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 800,
+          system: FAQ_SYSTEM,
+          messages: chatHistory,
+        })
+      });
+      const data = await res.json();
+      const reply = data.content?.[0]?.text || "Great question — reach out to us after downloading the app for more details!";
+      removeTyping();
+      chatHistory.push({ role: 'assistant', content: reply });
+      appendBotBubble(reply);
+    } catch(e) {
+      removeTyping();
+      appendBotBubble("Something went wrong — please try again!");
+    }
+
+    chatLoading = false;
+    document.getElementById('chatSendBtn').disabled = false;
+    return;
+  }
+
+  // ── QUALIFICATION FLOW ──
+  const q = QUESTIONS[questionIndex];
+
+  if (isAffirmative(text)) {
+    // Move to next question
+    if (questionIndex < QUESTIONS.length - 1) {
+      askQuestion(questionIndex + 1);
+    } else {
+      // All 4 answered affirmatively!
+      qualificationDone = true;
+      freeChat = true;
+      showTyping();
+      setTimeout(() => {
+        removeTyping();
+        appendDownloadBanner();
+        setTimeout(() => {
+          appendBotBubble("You can download the app above to get started 👆\n\nOr if you have any other questions, feel free to ask them here — I'm happy to help!");
+          document.getElementById('chatInput').placeholder = 'Ask any other questions…';
+        }, 600);
+      }, 800);
+    }
+  } else {
+    // Not affirmative — acknowledge and re-ask or clarify
+    showTyping();
+    chatLoading = true;
+    document.getElementById('chatSendBtn').disabled = true;
+
+    const clarifyPrompt = `The user is going through a qualification flow for Hetal Retail gig work. They were asked: "${q.ask.replace(/\*\*/g,'')}" and responded: "${text}". 
+    
+Their response doesn't clearly indicate they're okay with this aspect of the job. Respond warmly in 1-2 sentences — acknowledge their concern or question honestly, give a brief helpful clarification if needed, then gently ask again if this works for them. Don't be pushy. Be honest that this might not be for everyone.`;
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 300,
+          messages: [{ role: 'user', content: clarifyPrompt }],
+        })
+      });
+      const data = await res.json();
+      const reply = data.content?.[0]?.text || "Totally understandable! Does this still sound like something you'd want to try?";
+      removeTyping();
+      appendBotBubble(reply);
+    } catch(e) {
+      removeTyping();
+      appendBotBubble("No worries at all — does this still sound like something you'd want to try?");
+    }
+
+    chatLoading = false;
+    document.getElementById('chatSendBtn').disabled = false;
+  }
+}
+
+function handleChatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatMessage(); }
+}
+
+function autoResizeChat(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 80) + 'px';
+}
+
+// ── WAITLIST ───────────────────────────────────────────────────────────────
+function joinWaitlist() {
+  const email = document.getElementById('waitlistEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('waitlistEmail').style.borderColor = 'var(--red)';
+    return;
+  }
+  // Placeholder — would POST to backend in production
+  document.getElementById('waitlistEmail').style.display = 'none';
+  document.querySelector('#screenWaitlist .btn-primary').style.display = 'none';
+  document.getElementById('waitlistConfirm').style.display = 'block';
+}
+</script>
+</body>
+</html>
