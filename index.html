@@ -728,6 +728,77 @@
 
     .skip-chat:hover { color: var(--soft); }
 
+    /* ── YES / NO BUTTONS (qualification phase) ── */
+    .yn-row {
+      display: flex;
+      gap: 12px;
+      padding: 10px 16px 16px;
+      flex-shrink: 0;
+    }
+
+    .yn-btn {
+      flex: 1;
+      padding: 14px;
+      border-radius: 100px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 2px solid;
+      transition: all 0.18s;
+    }
+
+    .yn-btn.yes {
+      background: #26417b;
+      border-color: #495e90;
+      color: #eaeaea;
+    }
+
+    .yn-btn.yes:hover { background: #495e90; }
+
+    .yn-btn.no {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--muted);
+    }
+
+    .yn-btn.no:hover { border-color: var(--muted); color: var(--text); }
+
+    .yn-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── SUGGESTED QUESTIONS (free chat phase) ── */
+    .suggested-qs {
+      flex-direction: column;
+      gap: 8px;
+      padding: 6px 16px 10px;
+      flex-shrink: 0;
+    }
+
+    .suggested-qs-label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin: 0 0 2px 2px;
+    }
+
+    .suggested-q {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: #909abc;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.18s;
+    }
+
+    .suggested-q:hover { border-color: #495e90; color: #eaeaea; }
+
     /* ── SCREEN 6: SUCCESS ── */
     #screen6 {
       background: var(--bg);
@@ -1107,8 +1178,23 @@
 
     <div class="chat-messages" id="chatMessages"></div>
 
-    <div class="chat-input-row">
-      <textarea class="chat-text-input" id="chatInput" rows="1" placeholder="Type your answer…"
+    <!-- Yes / No buttons — visible during qualification questions -->
+    <div class="yn-row" id="ynButtons">
+      <button class="yn-btn no" onclick="handleYesNo('no')">No</button>
+      <button class="yn-btn yes" onclick="handleYesNo('yes')">Yes</button>
+    </div>
+
+    <!-- Suggested questions — shown after qualification -->
+    <div class="suggested-qs" id="suggestedQuestions" style="display:none;">
+      <p class="suggested-qs-label">Common questions</p>
+      <button class="suggested-q" onclick="askSuggestedQuestion(this, 'When do I get paid?')">When do I get paid?</button>
+      <button class="suggested-q" onclick="askSuggestedQuestion(this, 'What stores will I visit?')">What stores will I visit?</button>
+      <button class="suggested-q" onclick="askSuggestedQuestion(this, 'How do I record videos properly?')">How do I record videos properly?</button>
+    </div>
+
+    <!-- Free-form input — shown after qualification -->
+    <div class="chat-input-row" id="chatInputRow" style="display:none;">
+      <textarea class="chat-text-input" id="chatInput" rows="1" placeholder="Ask any other questions…"
         onkeydown="handleChatKey(event)" oninput="autoResizeChat(this)"></textarea>
       <button class="chat-send" id="chatSendBtn" onclick="sendChatMessage()">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -1244,7 +1330,7 @@ UPLOADS: Use Wi-Fi not cellular. Upload each aisle individually. If stops mid-wa
 
 EMPLOYMENT: 1099 independent contractor. No W-2 or full-time available. No interview needed - just download and complete first assignment.
 
-Keep answers to 2-4 sentences. Be direct and encouraging. If you don't know something, say so and suggest they ask after downloading the app.`;
+Keep answers to 2-4 sentences. Be direct and encouraging. If you don't know something or it's outside the information above, direct the user to https://www.hetalretail.com/become-a-hetalite for more details, or suggest they email support@hetalretail.com.`;
 
 // ── NAVIGATION ────────────────────────────────────────────────────────────
 function goTo(screenNum) {
@@ -1435,78 +1521,38 @@ function scrollChat() {
   setTimeout(() => area.scrollTop = area.scrollHeight, 60);
 }
 
-async function sendChatMessage() {
-  const input = document.getElementById('chatInput');
-  const text = input.value.trim();
-  if (!text || chatLoading) return;
+// ── YES / NO handler for qualification questions ──
+async function handleYesNo(answer) {
+  if (chatLoading) return;
+  appendUserBubble(answer === 'yes' ? 'Yes' : 'No');
 
-  input.value = '';
-  autoResizeChat(input);
-  appendUserBubble(text);
-
-  // ── FREE CHAT MODE (after qualification) ──
-  if (freeChat) {
-    chatLoading = true;
-    document.getElementById('chatSendBtn').disabled = true;
-    chatHistory.push({ role: 'user', content: text });
-    showTyping();
-
-    try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 800,
-          system: FAQ_SYSTEM,
-          messages: chatHistory,
-        })
-      });
-      const data = await res.json();
-      const reply = data.content?.[0]?.text || "Great question — reach out to us after downloading the app for more details!";
-      removeTyping();
-      chatHistory.push({ role: 'assistant', content: reply });
-      appendBotBubble(reply);
-    } catch(e) {
-      removeTyping();
-      appendBotBubble("Something went wrong — please try again!");
-    }
-
-    chatLoading = false;
-    document.getElementById('chatSendBtn').disabled = false;
-    return;
-  }
-
-  // ── QUALIFICATION FLOW ──
-  const q = QUESTIONS[questionIndex];
-
-  if (isAffirmative(text)) {
-    // Move to next question
+  if (answer === 'yes') {
     if (questionIndex < QUESTIONS.length - 1) {
       askQuestion(questionIndex + 1);
     } else {
-      // All 4 answered affirmatively!
+      // All 4 answered — switch to free chat UI
       qualificationDone = true;
       freeChat = true;
+      document.getElementById('ynButtons').style.display = 'none';
+      document.getElementById('suggestedQuestions').style.display = 'flex';
+      document.getElementById('chatInputRow').style.display = 'flex';
       showTyping();
       setTimeout(() => {
         removeTyping();
         appendDownloadBanner();
         setTimeout(() => {
           appendBotBubble("You can download the app above to get started 👆\n\nOr if you have any other questions, feel free to ask them here — I'm happy to help!");
-          document.getElementById('chatInput').placeholder = 'Ask any other questions…';
         }, 600);
       }, 800);
     }
   } else {
-    // Not affirmative — acknowledge and re-ask or clarify
+    // Tapped No — clarify and re-ask
+    const q = QUESTIONS[questionIndex];
     showTyping();
     chatLoading = true;
-    document.getElementById('chatSendBtn').disabled = true;
+    document.querySelectorAll('.yn-btn').forEach(b => b.disabled = true);
 
-    const clarifyPrompt = `The user is going through a qualification flow for Hetal Retail gig work. They were asked: "${q.ask.replace(/\*\*/g,'')}" and responded: "${text}". 
-    
-Their response doesn't clearly indicate they're okay with this aspect of the job. Respond warmly in 1-2 sentences — acknowledge their concern or question honestly, give a brief helpful clarification if needed, then gently ask again if this works for them. Don't be pushy. Be honest that this might not be for everyone.`;
+    const clarifyPrompt = `The user is going through a qualification flow for Hetal Retail gig work. They were asked: "${q.ask.replace(/\*\*/g,'')}" and tapped "No". Respond warmly in 1-2 sentences — acknowledge their concern honestly, give a brief helpful clarification if needed, then gently ask again if this could still work for them. Be honest that this might not be for everyone.`;
 
     try {
       const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -1519,7 +1565,7 @@ Their response doesn't clearly indicate they're okay with this aspect of the job
         })
       });
       const data = await res.json();
-      const reply = data.content?.[0]?.text || "Totally understandable! Does this still sound like something you'd want to try?";
+      const reply = data.content?.[0]?.text || "No worries — does this still sound like something you'd want to try?";
       removeTyping();
       appendBotBubble(reply);
     } catch(e) {
@@ -1528,8 +1574,57 @@ Their response doesn't clearly indicate they're okay with this aspect of the job
     }
 
     chatLoading = false;
-    document.getElementById('chatSendBtn').disabled = false;
+    document.querySelectorAll('.yn-btn').forEach(b => b.disabled = false);
   }
+}
+
+// ── Suggested question chip tapped ──
+function askSuggestedQuestion(btn, question) {
+  document.getElementById('suggestedQuestions').style.display = 'none';
+  appendUserBubble(question);
+  runFreeChat(question);
+}
+
+// ── Free-form text input ──
+async function sendChatMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text || chatLoading) return;
+  input.value = '';
+  autoResizeChat(input);
+  appendUserBubble(text);
+  await runFreeChat(text);
+}
+
+async function runFreeChat(text) {
+  chatLoading = true;
+  document.getElementById('chatSendBtn').disabled = true;
+  chatHistory.push({ role: 'user', content: text });
+  showTyping();
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 800,
+        system: FAQ_SYSTEM,
+        messages: chatHistory,
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || "Great question — reach out to us after downloading the app for more details!";
+    removeTyping();
+    chatHistory.push({ role: 'assistant', content: reply });
+    appendBotBubble(reply);
+  } catch(e) {
+    removeTyping();
+    appendBotBubble("Something went wrong — please try again!");
+  }
+
+  chatLoading = false;
+  document.getElementById('chatSendBtn').disabled = false;
 }
 
 function handleChatKey(e) {
