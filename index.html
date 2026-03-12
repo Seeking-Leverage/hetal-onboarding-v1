@@ -474,79 +474,6 @@
       font-weight: 600;
     }
 
-    /* ── TRANSPORT OPTIONS ── */
-    .transport-options {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 28px;
-    }
-
-    .transport-opt {
-      background: var(--card);
-      border: 2px solid var(--border);
-      border-radius: 16px;
-      padding: 18px 20px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .transport-opt:hover { border-color: var(--amber-dim); }
-
-    .transport-opt.selected {
-      border-color: #495e90;
-      background: #0e1a35;
-    }
-
-    .transport-opt .opt-icon {
-      font-size: 28px;
-      width: 44px;
-      text-align: center;
-    }
-
-    .opt-info strong {
-      display: block;
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .opt-info span {
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .opt-check {
-      margin-left: auto;
-      width: 22px; height: 22px;
-      border-radius: 50%;
-      border: 2px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: all 0.2s;
-    }
-
-    .transport-opt.selected .opt-check {
-      background: #495e90;
-      border-color: #495e90;
-    }
-
-    .opt-check::after {
-      content: '✓';
-      font-size: 12px;
-      font-weight: 700;
-      color: #0E0E12;
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .transport-opt.selected .opt-check::after { opacity: 1; }
-
     /* ── SCREEN 5: CHAT ── */
     #screen5 {
       background: var(--bg);
@@ -1089,7 +1016,7 @@
     <button class="back-btn" onclick="goTo(2)">←</button>
     <div class="screen-inner">
       <div class="screen-header">
-        <div class="step-label">Step 1 of 2</div>
+        <div class="step-label">Availability check</div>
         <h2 class="title">What's your <em>zip code?</em></h2>
         <p class="subtitle">We'll check if we have open assignments in your area.</p>
       </div>
@@ -1105,61 +1032,6 @@
 
       <button class="btn-primary" id="zipNextBtn" disabled onclick="handleZipNext()" style="opacity:0.4">
         Check availability →
-      </button>
-    </div>
-  </div>
-
-  <!-- ════════════════════════════════════════════
-       SCREEN 4 — HURDLE 2: TRANSPORTATION
-  ════════════════════════════════════════════ -->
-  <div class="screen" id="screen4">
-    <button class="back-btn" onclick="goTo(3)">←</button>
-    <div class="screen-inner">
-      <div class="screen-header">
-        <div class="step-label">Step 2 of 2</div>
-        <h2 class="title">How do you get <em>around?</em></h2>
-        <p class="subtitle">You'll need a reliable way to reach nearby stores — usually within 5–10 miles.</p>
-      </div>
-
-      <div class="hurdle-body">
-        <div class="transport-options" id="transportOptions">
-          <div class="transport-opt" onclick="selectTransport(this, 'yes')" data-value="yes">
-            <div class="opt-icon">🚗</div>
-            <div class="opt-info">
-              <strong>I have a car</strong>
-              <span>Drive to stores whenever works for me</span>
-            </div>
-            <div class="opt-check"></div>
-          </div>
-          <div class="transport-opt" onclick="selectTransport(this, 'yes')" data-value="yes">
-            <div class="opt-icon">🚌</div>
-            <div class="opt-info">
-              <strong>Public transit / rideshare</strong>
-              <span>Bus, subway, Uber, or Lyft</span>
-            </div>
-            <div class="opt-check"></div>
-          </div>
-          <div class="transport-opt" onclick="selectTransport(this, 'yes')" data-value="yes">
-            <div class="opt-icon">🚲</div>
-            <div class="opt-info">
-              <strong>Bike or walk</strong>
-              <span>Stores are nearby and accessible</span>
-            </div>
-            <div class="opt-check"></div>
-          </div>
-          <div class="transport-opt" onclick="selectTransport(this, 'no')" data-value="no">
-            <div class="opt-icon">❌</div>
-            <div class="opt-info">
-              <strong>I don't have a reliable way</strong>
-              <span>Getting to stores would be difficult</span>
-            </div>
-            <div class="opt-check"></div>
-          </div>
-        </div>
-      </div>
-
-      <button class="btn-primary" id="transportNextBtn" disabled onclick="handleTransportNext()" style="opacity:0.4">
-        Continue →
       </button>
     </div>
   </div>
@@ -1251,18 +1123,23 @@
     <div class="waitlist-inner">
       <div class="waitlist-icon">📍</div>
       <h2 class="success-title" style="font-size:28px; margin-bottom:12px;">Not in your area yet.</h2>
-      <p class="success-sub">We're expanding quickly. Drop your email and we'll notify you the moment work opens up near you.</p>
+      <p class="success-sub">We're expanding quickly. Drop your info and we'll notify you the moment work opens up near you.</p>
+      <p id="waitlistZipDisplay" style="font-size:13px;color:var(--amber);font-weight:600;margin-bottom:18px;"></p>
 
-      <input class="email-input" id="waitlistEmail" type="email" placeholder="your@email.com" />
-      <button class="btn-primary" style="width:100%;" onclick="joinWaitlist()">Notify me when you're here →</button>
-      <div id="waitlistConfirm" style="display:none; margin-top:16px;">
+      <div id="waitlistForm" style="width:100%;">
+        <input class="email-input" id="waitlistFirstName" type="text" placeholder="First name" style="margin-bottom:12px;" />
+        <input class="email-input" id="waitlistEmail" type="email" placeholder="your@email.com" />
+        <button class="btn-primary" style="width:100%; margin-top:2px;" onclick="joinWaitlist()">Notify me when you're here →</button>
+      </div>
+
+      <div id="waitlistConfirm" style="display:none; margin-top:16px; width:100%;">
         <div class="result-pass" style="justify-content:center;">
           ✓ &nbsp; You're on the list — we'll be in touch!
         </div>
       </div>
 
       <p style="margin-top: 24px; font-size:13px; color:var(--muted); cursor:pointer; text-decoration:underline; text-underline-offset:3px;" onclick="goTo(1)">
-        ← Start over with a different zip code
+        ← Try a different zip code
       </p>
     </div>
   </div>
@@ -1270,6 +1147,12 @@
 </div>
 
 <script>
+// ── ACTIVE ZIP CODES (replace with your real list) ────────────────────────
+const ACTIVE_ZIPS = new Set([
+  // e.g. '90210', '10001', '77001'
+  // Paste your full list here — one quoted zip per line
+]);
+
 // ── TAPPABLE STEPS ────────────────────────────────────────────────────────
 const stepsConfirmed = new Set();
 
@@ -1304,14 +1187,14 @@ function tapStep(n) {
 
 // ── STATE ──────────────────────────────────────────────────────────────────
 let currentScreen = 'screen1';
-let transportChoice = null;
 let zipPassed = false;
+let lastZip = '';
 let chatHistory = [];
 let chatLoading = false;
 
 const PROGRESS = {
-  screen1: 0, screen2: 20, screen3: 40,
-  screen4: 60, screen5: 80, screen6: 100, screenWaitlist: 0
+  screen1: 0, screen2: 25, screen3: 50,
+  screen5: 75, screen6: 100, screenWaitlist: 0
 };
 
 const FAQ_SYSTEM = `You are a friendly, concise support assistant for Hetal — a gig-economy mobile app where workers visit stores and film product aisles to earn money. You're embedded in a pre-download onboarding flow, so the person hasn't downloaded the app yet.
@@ -1349,6 +1232,12 @@ function goTo(screenNum) {
 
     // Init chat on screen 5
     if (id === 'screen5' && chatHistory.length === 0) initChat();
+
+    // Populate waitlist with retained zip
+    if (id === 'screenWaitlist') {
+      const zipDisplay = document.getElementById('waitlistZipDisplay');
+      if (zipDisplay && lastZip) zipDisplay.textContent = `Area: ${lastZip}`;
+    }
   }, 300);
 }
 
@@ -1371,6 +1260,7 @@ function handleZipNext() {
   const btn = document.getElementById('zipNextBtn');
   const resultEl = document.getElementById('zipResult');
 
+  lastZip = zip;
   btn.textContent = 'Checking…';
   btn.disabled = true;
 
@@ -1378,15 +1268,14 @@ function handleZipNext() {
   resultEl.style.display = 'block';
   resultEl.innerHTML = `<div class="checking-state"><div class="spinner"></div> Checking coverage for ${zip}…</div>`;
 
-  // 80% of zip codes have jobs
   setTimeout(() => {
-    zipPassed = Math.random() > 0.2;
+    zipPassed = ACTIVE_ZIPS.has(zip);
 
     if (zipPassed) {
       resultEl.innerHTML = `<div class="result-pass">✓ &nbsp; Great news — we have open assignments near ${zip}!</div>`;
       btn.textContent = 'Continue →';
       btn.disabled = false;
-      btn.onclick = () => goTo(4);
+      btn.onclick = () => goTo(5);
     } else {
       resultEl.innerHTML = `<div class="result-fail">✗ &nbsp; We don't have assignments in ${zip} yet.</div>`;
       btn.textContent = 'Join the waitlist →';
@@ -1395,25 +1284,6 @@ function handleZipNext() {
       btn.onclick = () => goTo('waitlist');
     }
   }, 1400);
-}
-
-// ── TRANSPORT HURDLE ──────────────────────────────────────────────────────
-function selectTransport(el, value) {
-  document.querySelectorAll('.transport-opt').forEach(o => o.classList.remove('selected'));
-  el.classList.add('selected');
-  transportChoice = value;
-
-  const btn = document.getElementById('transportNextBtn');
-  btn.disabled = false;
-  btn.style.opacity = '1';
-}
-
-function handleTransportNext() {
-  if (transportChoice === 'no') {
-    goTo('waitlist');
-  } else {
-    goTo(5);
-  }
 }
 
 // ── CHAT ──────────────────────────────────────────────────────────────────
@@ -1555,8 +1425,11 @@ async function handleYesNo(answer) {
     const clarifyPrompt = `The user is going through a qualification flow for Hetal Retail gig work. They were asked: "${q.ask.replace(/\*\*/g,'')}" and tapped "No". Respond warmly in 1-2 sentences — acknowledge their concern honestly, give a brief helpful clarification if needed, then gently ask again if this could still work for them. Be honest that this might not be for everyone.`;
 
     try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 8000);
       const res = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
+        signal: controller.signal,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514',
@@ -1564,6 +1437,7 @@ async function handleYesNo(answer) {
           messages: [{ role: 'user', content: clarifyPrompt }],
         })
       });
+      clearTimeout(timer);
       const data = await res.json();
       const reply = data.content?.[0]?.text || "No worries — does this still sound like something you'd want to try?";
       removeTyping();
@@ -1603,8 +1477,11 @@ async function runFreeChat(text) {
   showTyping();
 
   try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8000);
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
+      signal: controller.signal,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
@@ -1613,6 +1490,7 @@ async function runFreeChat(text) {
         messages: chatHistory,
       })
     });
+    clearTimeout(timer);
     const data = await res.json();
     const reply = data.content?.[0]?.text || "Great question — reach out to us after downloading the app for more details!";
     removeTyping();
@@ -1620,7 +1498,10 @@ async function runFreeChat(text) {
     appendBotBubble(reply);
   } catch(e) {
     removeTyping();
-    appendBotBubble("Something went wrong — please try again!");
+    const msg = e.name === 'AbortError'
+      ? "That took too long — please try again!"
+      : "Something went wrong — please try again!";
+    appendBotBubble(msg);
   }
 
   chatLoading = false;
@@ -1638,14 +1519,28 @@ function autoResizeChat(el) {
 
 // ── WAITLIST ───────────────────────────────────────────────────────────────
 function joinWaitlist() {
+  const firstName = document.getElementById('waitlistFirstName').value.trim();
   const email = document.getElementById('waitlistEmail').value.trim();
-  if (!email || !email.includes('@')) {
-    document.getElementById('waitlistEmail').style.borderColor = 'var(--red)';
-    return;
+  let valid = true;
+
+  if (!firstName) {
+    document.getElementById('waitlistFirstName').style.borderColor = 'var(--red)';
+    valid = false;
+  } else {
+    document.getElementById('waitlistFirstName').style.borderColor = '';
   }
-  // Placeholder — would POST to backend in production
-  document.getElementById('waitlistEmail').style.display = 'none';
-  document.querySelector('#screenWaitlist .btn-primary').style.display = 'none';
+
+  if (!email || !email.includes('@') || email.indexOf('@') === 0 || email.endsWith('@')) {
+    document.getElementById('waitlistEmail').style.borderColor = 'var(--red)';
+    valid = false;
+  } else {
+    document.getElementById('waitlistEmail').style.borderColor = '';
+  }
+
+  if (!valid) return;
+
+  // Placeholder — would POST { firstName, email, zip: lastZip } to backend in production
+  document.getElementById('waitlistForm').style.display = 'none';
   document.getElementById('waitlistConfirm').style.display = 'block';
 }
 </script>
