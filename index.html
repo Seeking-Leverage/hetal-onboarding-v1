@@ -474,79 +474,6 @@
       font-weight: 600;
     }
 
-    /* ── TRANSPORT OPTIONS ── */
-    .transport-options {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 28px;
-    }
-
-    .transport-opt {
-      background: var(--card);
-      border: 2px solid var(--border);
-      border-radius: 16px;
-      padding: 18px 20px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .transport-opt:hover { border-color: var(--amber-dim); }
-
-    .transport-opt.selected {
-      border-color: #495e90;
-      background: #0e1a35;
-    }
-
-    .transport-opt .opt-icon {
-      font-size: 28px;
-      width: 44px;
-      text-align: center;
-    }
-
-    .opt-info strong {
-      display: block;
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .opt-info span {
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .opt-check {
-      margin-left: auto;
-      width: 22px; height: 22px;
-      border-radius: 50%;
-      border: 2px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: all 0.2s;
-    }
-
-    .transport-opt.selected .opt-check {
-      background: #495e90;
-      border-color: #495e90;
-    }
-
-    .opt-check::after {
-      content: '✓';
-      font-size: 12px;
-      font-weight: 700;
-      color: #0E0E12;
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .transport-opt.selected .opt-check::after { opacity: 1; }
-
     /* ── SCREEN 5: CHAT ── */
     #screen5 {
       background: var(--bg);
@@ -727,6 +654,77 @@
     }
 
     .skip-chat:hover { color: var(--soft); }
+
+    /* ── YES / NO BUTTONS (qualification phase) ── */
+    .yn-row {
+      display: flex;
+      gap: 12px;
+      padding: 10px 16px 16px;
+      flex-shrink: 0;
+    }
+
+    .yn-btn {
+      flex: 1;
+      padding: 14px;
+      border-radius: 100px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 2px solid;
+      transition: all 0.18s;
+    }
+
+    .yn-btn.yes {
+      background: #26417b;
+      border-color: #495e90;
+      color: #eaeaea;
+    }
+
+    .yn-btn.yes:hover { background: #495e90; }
+
+    .yn-btn.no {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--muted);
+    }
+
+    .yn-btn.no:hover { border-color: var(--muted); color: var(--text); }
+
+    .yn-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── SUGGESTED QUESTIONS (free chat phase) ── */
+    .suggested-qs {
+      flex-direction: column;
+      gap: 8px;
+      padding: 6px 16px 10px;
+      flex-shrink: 0;
+    }
+
+    .suggested-qs-label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin: 0 0 2px 2px;
+    }
+
+    .suggested-q {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: #909abc;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.18s;
+    }
+
+    .suggested-q:hover { border-color: #495e90; color: #eaeaea; }
 
     /* ── SCREEN 6: SUCCESS ── */
     #screen6 {
@@ -1018,7 +1016,7 @@
     <button class="back-btn" onclick="goTo(2)">←</button>
     <div class="screen-inner">
       <div class="screen-header">
-        <div class="step-label">Step 1 of 2</div>
+        <div class="step-label">Availability check</div>
         <h2 class="title">What's your <em>zip code?</em></h2>
         <p class="subtitle">We'll check if we have open assignments in your area.</p>
       </div>
@@ -1039,61 +1037,6 @@
   </div>
 
   <!-- ════════════════════════════════════════════
-       SCREEN 4 — HURDLE 2: TRANSPORTATION
-  ════════════════════════════════════════════ -->
-  <div class="screen" id="screen4">
-    <button class="back-btn" onclick="goTo(3)">←</button>
-    <div class="screen-inner">
-      <div class="screen-header">
-        <div class="step-label">Step 2 of 2</div>
-        <h2 class="title">How do you get <em>around?</em></h2>
-        <p class="subtitle">You'll need a reliable way to reach nearby stores — usually within 5–10 miles.</p>
-      </div>
-
-      <div class="hurdle-body">
-        <div class="transport-options" id="transportOptions">
-          <div class="transport-opt" onclick="selectTransport(this, 'yes')" data-value="yes">
-            <div class="opt-icon">🚗</div>
-            <div class="opt-info">
-              <strong>I have a car</strong>
-              <span>Drive to stores whenever works for me</span>
-            </div>
-            <div class="opt-check"></div>
-          </div>
-          <div class="transport-opt" onclick="selectTransport(this, 'yes')" data-value="yes">
-            <div class="opt-icon">🚌</div>
-            <div class="opt-info">
-              <strong>Public transit / rideshare</strong>
-              <span>Bus, subway, Uber, or Lyft</span>
-            </div>
-            <div class="opt-check"></div>
-          </div>
-          <div class="transport-opt" onclick="selectTransport(this, 'yes')" data-value="yes">
-            <div class="opt-icon">🚲</div>
-            <div class="opt-info">
-              <strong>Bike or walk</strong>
-              <span>Stores are nearby and accessible</span>
-            </div>
-            <div class="opt-check"></div>
-          </div>
-          <div class="transport-opt" onclick="selectTransport(this, 'no')" data-value="no">
-            <div class="opt-icon">❌</div>
-            <div class="opt-info">
-              <strong>I don't have a reliable way</strong>
-              <span>Getting to stores would be difficult</span>
-            </div>
-            <div class="opt-check"></div>
-          </div>
-        </div>
-      </div>
-
-      <button class="btn-primary" id="transportNextBtn" disabled onclick="handleTransportNext()" style="opacity:0.4">
-        Continue →
-      </button>
-    </div>
-  </div>
-
-  <!-- ════════════════════════════════════════════
        SCREEN 5 — FAQ CHAT
   ════════════════════════════════════════════ -->
   <div class="screen" id="screen5" style="display:flex; flex-direction:column;">
@@ -1107,8 +1050,23 @@
 
     <div class="chat-messages" id="chatMessages"></div>
 
-    <div class="chat-input-row">
-      <textarea class="chat-text-input" id="chatInput" rows="1" placeholder="Type your answer…"
+    <!-- Yes / No buttons — visible during qualification questions -->
+    <div class="yn-row" id="ynButtons">
+      <button class="yn-btn no" onclick="handleYesNo('no')">No</button>
+      <button class="yn-btn yes" onclick="handleYesNo('yes')">Yes</button>
+    </div>
+
+    <!-- Suggested questions — shown after qualification -->
+    <div class="suggested-qs" id="suggestedQuestions" style="display:none;">
+      <p class="suggested-qs-label">Common questions</p>
+      <button class="suggested-q" onclick="askSuggestedQuestion(this, 'When do I get paid?')">When do I get paid?</button>
+      <button class="suggested-q" onclick="askSuggestedQuestion(this, 'What stores will I visit?')">What stores will I visit?</button>
+      <button class="suggested-q" onclick="askSuggestedQuestion(this, 'How do I record videos properly?')">How do I record videos properly?</button>
+    </div>
+
+    <!-- Free-form input — shown after qualification -->
+    <div class="chat-input-row" id="chatInputRow" style="display:none;">
+      <textarea class="chat-text-input" id="chatInput" rows="1" placeholder="Ask any other questions…"
         onkeydown="handleChatKey(event)" oninput="autoResizeChat(this)"></textarea>
       <button class="chat-send" id="chatSendBtn" onclick="sendChatMessage()">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -1165,18 +1123,23 @@
     <div class="waitlist-inner">
       <div class="waitlist-icon">📍</div>
       <h2 class="success-title" style="font-size:28px; margin-bottom:12px;">Not in your area yet.</h2>
-      <p class="success-sub">We're expanding quickly. Drop your email and we'll notify you the moment work opens up near you.</p>
+      <p class="success-sub">We're expanding quickly. Drop your info and we'll notify you the moment work opens up near you.</p>
+      <p id="waitlistZipDisplay" style="font-size:13px;color:var(--amber);font-weight:600;margin-bottom:18px;"></p>
 
-      <input class="email-input" id="waitlistEmail" type="email" placeholder="your@email.com" />
-      <button class="btn-primary" style="width:100%;" onclick="joinWaitlist()">Notify me when you're here →</button>
-      <div id="waitlistConfirm" style="display:none; margin-top:16px;">
+      <div id="waitlistForm" style="width:100%;">
+        <input class="email-input" id="waitlistFirstName" type="text" placeholder="First name" style="margin-bottom:12px;" />
+        <input class="email-input" id="waitlistEmail" type="email" placeholder="your@email.com" />
+        <button class="btn-primary" style="width:100%; margin-top:2px;" onclick="joinWaitlist()">Notify me when you're here →</button>
+      </div>
+
+      <div id="waitlistConfirm" style="display:none; margin-top:16px; width:100%;">
         <div class="result-pass" style="justify-content:center;">
           ✓ &nbsp; You're on the list — we'll be in touch!
         </div>
       </div>
 
       <p style="margin-top: 24px; font-size:13px; color:var(--muted); cursor:pointer; text-decoration:underline; text-underline-offset:3px;" onclick="goTo(1)">
-        ← Start over with a different zip code
+        ← Try a different zip code
       </p>
     </div>
   </div>
@@ -1184,6 +1147,59 @@
 </div>
 
 <script>
+// ── ACTIVE ZIP CODES (replace with your real list) ────────────────────────
+const ACTIVE_ZIPS = new Set([
+  '07001','07721','08096',
+  '17402','17408',
+  '19123','19145','19149','19446','19709','19803','19808',
+  '20109','20110','20169',
+  '21122','21224','21237',
+  '27408','27410','27609','27610','27613','27615','27616','27617','27707','27713',
+  '28206','28216','28227','28273','28277','28314',
+  '29611','29615',
+  '30028','30040','30043','30045','30046','30314','30316','30324','30326',
+  '30331','30363','30907','30909',
+  '32205','32207','32210','32218','32222','32244','32772',
+  '33177','33259','33458','33511','33578','33596','33611','33618','33625',
+  '33626','33647','33760','33771','33928','33948',
+  '34109','34114','34119','34471','34481','34601','34604','34613','34654',
+  '34655','34986','34994','34997',
+  '35206','35210','35235','35242','35244','35757','35758',
+  '37127','37129','37130','38002',
+  '64154','64155','64158','66046','66049',
+  '74011','74012','74014','74055','74074','74133',
+  '75605','75701','75703',
+  '76052','76054','76092','76120','76179','76201','76205','76227','76244',
+  '77007','77015','77022','77023','77024','77037','77040','77055','77063',
+  '77070','77075','77077','77082','77086','77095','77099','77406','77407',
+  '77449','77494','77584',
+  '78411','78412','78504','78613','78633','78640','78759',
+  '79415','79416','79423','79424','79907','79912','79925','79935','79936',
+  '80002','80003','80007','80011','80012','80015','80020','80023','80026',
+  '80031','80033','80123','80127','80207','80212','80222','80226','80229',
+  '80231','80234','80238','80249','80301','80302','80303','80401','80524',
+  '80525','80537','80538','80631','80634',
+  '80905','80906','80909','80915','80916','80917','80918','80920','80921','80924',
+  '81501','81505','82009',
+  '84057','84058','84097','84790',
+  '85013','85054','85085','85086','85138','85139','85364','85365','85388','85614',
+  '86001','86301','86314',
+  '87110','87111','87113','87114','87120','87123','87124','87144','87501','87507',
+  '88001','88011',
+  '89434','89436','89502','89511','89521','89705','89706',
+  '90016','90017','90024','90028','90035','90036','90041','90048','90230',
+  '90260','90278','90501','90505','90650','90703','90713','90740',
+  '91011','91016','91107','91709','91740','91750','91765','91791','91801','91941',
+  '92008','92009','92024','92075','92210','92264','92545','92591','92626',
+  '92627','92630','92646','92647','92672','92691','92782','92841',
+  '93003','93010','93103','93105','93117','93277','93291','93292','93311',
+  '93313','93405','93534','93536','93551','93552','93611','93612','93650',
+  '93711','93720','93722','93727',
+  '94015','94513','94560','94564','94577','94578','94611','94706','94710',
+  '95110','95121','95122','95125','95129','95131','95132','95133','95134',
+  '95340','95348','96003','98383',
+]);
+
 // ── TAPPABLE STEPS ────────────────────────────────────────────────────────
 const stepsConfirmed = new Set();
 
@@ -1218,14 +1234,14 @@ function tapStep(n) {
 
 // ── STATE ──────────────────────────────────────────────────────────────────
 let currentScreen = 'screen1';
-let transportChoice = null;
 let zipPassed = false;
+let lastZip = '';
 let chatHistory = [];
 let chatLoading = false;
 
 const PROGRESS = {
-  screen1: 0, screen2: 20, screen3: 40,
-  screen4: 60, screen5: 80, screen6: 100, screenWaitlist: 0
+  screen1: 0, screen2: 25, screen3: 50,
+  screen5: 75, screen6: 100, screenWaitlist: 0
 };
 
 const FAQ_SYSTEM = `You are a friendly, concise support assistant for Hetal — a gig-economy mobile app where workers visit stores and film product aisles to earn money. You're embedded in a pre-download onboarding flow, so the person hasn't downloaded the app yet.
@@ -1244,7 +1260,7 @@ UPLOADS: Use Wi-Fi not cellular. Upload each aisle individually. If stops mid-wa
 
 EMPLOYMENT: 1099 independent contractor. No W-2 or full-time available. No interview needed - just download and complete first assignment.
 
-Keep answers to 2-4 sentences. Be direct and encouraging. If you don't know something, say so and suggest they ask after downloading the app.`;
+Keep answers to 2-4 sentences. Be direct and encouraging. If you don't know something or it's outside the information above, direct the user to https://www.hetalretail.com/become-a-hetalite for more details, or suggest they email support@hetalretail.com.`;
 
 // ── NAVIGATION ────────────────────────────────────────────────────────────
 function goTo(screenNum) {
@@ -1263,6 +1279,12 @@ function goTo(screenNum) {
 
     // Init chat on screen 5
     if (id === 'screen5' && chatHistory.length === 0) initChat();
+
+    // Populate waitlist with retained zip
+    if (id === 'screenWaitlist') {
+      const zipDisplay = document.getElementById('waitlistZipDisplay');
+      if (zipDisplay && lastZip) zipDisplay.textContent = `Area: ${lastZip}`;
+    }
   }, 300);
 }
 
@@ -1285,6 +1307,7 @@ function handleZipNext() {
   const btn = document.getElementById('zipNextBtn');
   const resultEl = document.getElementById('zipResult');
 
+  lastZip = zip;
   btn.textContent = 'Checking…';
   btn.disabled = true;
 
@@ -1292,15 +1315,14 @@ function handleZipNext() {
   resultEl.style.display = 'block';
   resultEl.innerHTML = `<div class="checking-state"><div class="spinner"></div> Checking coverage for ${zip}…</div>`;
 
-  // 50% randomization
   setTimeout(() => {
-    zipPassed = Math.random() > 0.5;
+    zipPassed = ACTIVE_ZIPS.has(zip);
 
     if (zipPassed) {
       resultEl.innerHTML = `<div class="result-pass">✓ &nbsp; Great news — we have open assignments near ${zip}!</div>`;
       btn.textContent = 'Continue →';
       btn.disabled = false;
-      btn.onclick = () => goTo(4);
+      btn.onclick = () => goTo(5);
     } else {
       resultEl.innerHTML = `<div class="result-fail">✗ &nbsp; We don't have assignments in ${zip} yet.</div>`;
       btn.textContent = 'Join the waitlist →';
@@ -1309,25 +1331,6 @@ function handleZipNext() {
       btn.onclick = () => goTo('waitlist');
     }
   }, 1400);
-}
-
-// ── TRANSPORT HURDLE ──────────────────────────────────────────────────────
-function selectTransport(el, value) {
-  document.querySelectorAll('.transport-opt').forEach(o => o.classList.remove('selected'));
-  el.classList.add('selected');
-  transportChoice = value;
-
-  const btn = document.getElementById('transportNextBtn');
-  btn.disabled = false;
-  btn.style.opacity = '1';
-}
-
-function handleTransportNext() {
-  if (transportChoice === 'no') {
-    goTo('waitlist');
-  } else {
-    goTo(5);
-  }
 }
 
 // ── CHAT ──────────────────────────────────────────────────────────────────
@@ -1435,82 +1438,45 @@ function scrollChat() {
   setTimeout(() => area.scrollTop = area.scrollHeight, 60);
 }
 
-async function sendChatMessage() {
-  const input = document.getElementById('chatInput');
-  const text = input.value.trim();
-  if (!text || chatLoading) return;
+// ── YES / NO handler for qualification questions ──
+async function handleYesNo(answer) {
+  if (chatLoading) return;
+  appendUserBubble(answer === 'yes' ? 'Yes' : 'No');
 
-  input.value = '';
-  autoResizeChat(input);
-  appendUserBubble(text);
-
-  // ── FREE CHAT MODE (after qualification) ──
-  if (freeChat) {
-    chatLoading = true;
-    document.getElementById('chatSendBtn').disabled = true;
-    chatHistory.push({ role: 'user', content: text });
-    showTyping();
-
-    try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 800,
-          system: FAQ_SYSTEM,
-          messages: chatHistory,
-        })
-      });
-      const data = await res.json();
-      const reply = data.content?.[0]?.text || "Great question — reach out to us after downloading the app for more details!";
-      removeTyping();
-      chatHistory.push({ role: 'assistant', content: reply });
-      appendBotBubble(reply);
-    } catch(e) {
-      removeTyping();
-      appendBotBubble("Something went wrong — please try again!");
-    }
-
-    chatLoading = false;
-    document.getElementById('chatSendBtn').disabled = false;
-    return;
-  }
-
-  // ── QUALIFICATION FLOW ──
-  const q = QUESTIONS[questionIndex];
-
-  if (isAffirmative(text)) {
-    // Move to next question
+  if (answer === 'yes') {
     if (questionIndex < QUESTIONS.length - 1) {
       askQuestion(questionIndex + 1);
     } else {
-      // All 4 answered affirmatively!
+      // All 4 answered — switch to free chat UI
       qualificationDone = true;
       freeChat = true;
+      document.getElementById('ynButtons').style.display = 'none';
+      document.getElementById('suggestedQuestions').style.display = 'flex';
+      document.getElementById('chatInputRow').style.display = 'flex';
       showTyping();
       setTimeout(() => {
         removeTyping();
         appendDownloadBanner();
         setTimeout(() => {
           appendBotBubble("You can download the app above to get started 👆\n\nOr if you have any other questions, feel free to ask them here — I'm happy to help!");
-          document.getElementById('chatInput').placeholder = 'Ask any other questions…';
         }, 600);
       }, 800);
     }
   } else {
-    // Not affirmative — acknowledge and re-ask or clarify
+    // Tapped No — clarify and re-ask
+    const q = QUESTIONS[questionIndex];
     showTyping();
     chatLoading = true;
-    document.getElementById('chatSendBtn').disabled = true;
+    document.querySelectorAll('.yn-btn').forEach(b => b.disabled = true);
 
-    const clarifyPrompt = `The user is going through a qualification flow for Hetal Retail gig work. They were asked: "${q.ask.replace(/\*\*/g,'')}" and responded: "${text}". 
-    
-Their response doesn't clearly indicate they're okay with this aspect of the job. Respond warmly in 1-2 sentences — acknowledge their concern or question honestly, give a brief helpful clarification if needed, then gently ask again if this works for them. Don't be pushy. Be honest that this might not be for everyone.`;
+    const clarifyPrompt = `The user is going through a qualification flow for Hetal Retail gig work. They were asked: "${q.ask.replace(/\*\*/g,'')}" and tapped "No". Respond warmly in 1-2 sentences — acknowledge their concern honestly, give a brief helpful clarification if needed, then gently ask again if this could still work for them. Be honest that this might not be for everyone.`;
 
     try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 8000);
       const res = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
+        signal: controller.signal,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514',
@@ -1518,8 +1484,9 @@ Their response doesn't clearly indicate they're okay with this aspect of the job
           messages: [{ role: 'user', content: clarifyPrompt }],
         })
       });
+      clearTimeout(timer);
       const data = await res.json();
-      const reply = data.content?.[0]?.text || "Totally understandable! Does this still sound like something you'd want to try?";
+      const reply = data.content?.[0]?.text || "No worries — does this still sound like something you'd want to try?";
       removeTyping();
       appendBotBubble(reply);
     } catch(e) {
@@ -1528,8 +1495,64 @@ Their response doesn't clearly indicate they're okay with this aspect of the job
     }
 
     chatLoading = false;
-    document.getElementById('chatSendBtn').disabled = false;
+    document.querySelectorAll('.yn-btn').forEach(b => b.disabled = false);
   }
+}
+
+// ── Suggested question chip tapped ──
+function askSuggestedQuestion(btn, question) {
+  document.getElementById('suggestedQuestions').style.display = 'none';
+  appendUserBubble(question);
+  runFreeChat(question);
+}
+
+// ── Free-form text input ──
+async function sendChatMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text || chatLoading) return;
+  input.value = '';
+  autoResizeChat(input);
+  appendUserBubble(text);
+  await runFreeChat(text);
+}
+
+async function runFreeChat(text) {
+  chatLoading = true;
+  document.getElementById('chatSendBtn').disabled = true;
+  chatHistory.push({ role: 'user', content: text });
+  showTyping();
+
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8000);
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      signal: controller.signal,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 800,
+        system: FAQ_SYSTEM,
+        messages: chatHistory,
+      })
+    });
+    clearTimeout(timer);
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || "Great question — reach out to us after downloading the app for more details!";
+    removeTyping();
+    chatHistory.push({ role: 'assistant', content: reply });
+    appendBotBubble(reply);
+  } catch(e) {
+    removeTyping();
+    const msg = e.name === 'AbortError'
+      ? "That took too long — please try again!"
+      : "Something went wrong — please try again!";
+    appendBotBubble(msg);
+  }
+
+  chatLoading = false;
+  document.getElementById('chatSendBtn').disabled = false;
 }
 
 function handleChatKey(e) {
@@ -1543,14 +1566,28 @@ function autoResizeChat(el) {
 
 // ── WAITLIST ───────────────────────────────────────────────────────────────
 function joinWaitlist() {
+  const firstName = document.getElementById('waitlistFirstName').value.trim();
   const email = document.getElementById('waitlistEmail').value.trim();
-  if (!email || !email.includes('@')) {
-    document.getElementById('waitlistEmail').style.borderColor = 'var(--red)';
-    return;
+  let valid = true;
+
+  if (!firstName) {
+    document.getElementById('waitlistFirstName').style.borderColor = 'var(--red)';
+    valid = false;
+  } else {
+    document.getElementById('waitlistFirstName').style.borderColor = '';
   }
-  // Placeholder — would POST to backend in production
-  document.getElementById('waitlistEmail').style.display = 'none';
-  document.querySelector('#screenWaitlist .btn-primary').style.display = 'none';
+
+  if (!email || !email.includes('@') || email.indexOf('@') === 0 || email.endsWith('@')) {
+    document.getElementById('waitlistEmail').style.borderColor = 'var(--red)';
+    valid = false;
+  } else {
+    document.getElementById('waitlistEmail').style.borderColor = '';
+  }
+
+  if (!valid) return;
+
+  // Placeholder — would POST { firstName, email, zip: lastZip } to backend in production
+  document.getElementById('waitlistForm').style.display = 'none';
   document.getElementById('waitlistConfirm').style.display = 'block';
 }
 </script>
