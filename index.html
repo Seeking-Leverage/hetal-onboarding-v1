@@ -1090,35 +1090,53 @@
     <div class="success-inner">
       <div class="success-icon" style="background:linear-gradient(135deg,#495e90,#26417b);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.08em;color:#eaeaea;">HR</div>
       <h2 class="success-title">You're in.<br>Let's get started.</h2>
-      <p class="success-sub">You're a great fit for Hetal. Download the app, claim your first assignment, and get paid.</p>
+      <p class="success-sub">You're a great fit for Hetal. Enter your info and we'll send you the download link.</p>
 
-      <div class="perks-list">
-        <div class="perk">
-          <div class="perk-icon">📅</div>
-          <div class="perk-text">
-            <strong>Assignments drop Monday mornings</strong>
-            <span>Reserve yours first thing — they go fast</span>
-          </div>
-        </div>
-        <div class="perk">
-          <div class="perk-icon">💰</div>
-          <div class="perk-text">
-            <strong>Your trial assignment pays $10</strong>
-            <span>Complete it to unlock the full assignment pool</span>
-          </div>
-        </div>
-        <div class="perk">
-          <div class="perk-icon">📶</div>
-          <div class="perk-text">
-            <strong>Upload on Wi-Fi at home</strong>
-            <span>Film at the store, upload later — no rush</span>
-          </div>
-        </div>
+      <!-- Sign-up form -->
+      <div id="signupForm" style="width:100%; margin-top:4px;">
+        <input class="email-input" id="signupFirstName" type="text" placeholder="First name" style="margin-bottom:12px;" />
+        <input class="email-input" id="signupEmail" type="email" placeholder="your@email.com" style="margin-bottom:12px;" />
+        <button class="btn-primary" style="width:100%; margin-top:2px;" id="signupBtn" onclick="submitSignup()">
+          Get the app →
+        </button>
+        <p id="signupError" style="display:none; color:var(--red); font-size:13px; margin-top:10px; text-align:center;"></p>
       </div>
 
-      <button class="btn-primary" onclick="alert('📱 This would open the App Store or Google Play in production!')">
-        Download the Hetal App →
-      </button>
+      <!-- Shown after successful sign-up -->
+      <div id="signupSuccess" style="display:none; width:100%;">
+        <div class="result-pass" style="justify-content:center; margin-bottom:20px;">
+          ✓ &nbsp; You're on the list — check your inbox!
+        </div>
+
+        <div class="perks-list">
+          <div class="perk">
+            <div class="perk-icon">📅</div>
+            <div class="perk-text">
+              <strong>Assignments drop Monday mornings</strong>
+              <span>Reserve yours first thing — they go fast</span>
+            </div>
+          </div>
+          <div class="perk">
+            <div class="perk-icon">💰</div>
+            <div class="perk-text">
+              <strong>Your trial assignment pays $10</strong>
+              <span>Complete it to unlock the full assignment pool</span>
+            </div>
+          </div>
+          <div class="perk">
+            <div class="perk-icon">📶</div>
+            <div class="perk-text">
+              <strong>Upload on Wi-Fi at home</strong>
+              <span>Film at the store, upload later — no rush</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="alert('📱 This would open the App Store or Google Play in production!')">
+          Download the Hetal App →
+        </button>
+      </div>
+
       <button class="btn-ghost" onclick="goTo(5)">← Back to questions</button>
     </div>
   </div>
@@ -1154,6 +1172,10 @@
 </div>
 
 <script>
+// ── GOOGLE SHEETS ENDPOINT ────────────────────────────────────────────────
+// Replace with your deployed Google Apps Script Web App URL
+const SHEET_URL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL';
+
 // ── ACTIVE ZIP CODES (replace with your real list) ────────────────────────
 const ACTIVE_ZIPS = new Set([
   '07001','07721','08096',
@@ -1513,7 +1535,51 @@ function askSuggestedQuestion(btn, question) {
 
 
 // ── WAITLIST ───────────────────────────────────────────────────────────────
-function joinWaitlist() {
+async function postToSheet(payload) {
+  if (!SHEET_URL || SHEET_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') return;
+  try {
+    await fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch (e) {
+    // silent — don't block UI on sheet errors
+  }
+}
+
+async function submitSignup() {
+  const firstName = document.getElementById('signupFirstName').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const errorEl = document.getElementById('signupError');
+  let valid = true;
+
+  document.getElementById('signupFirstName').style.borderColor = '';
+  document.getElementById('signupEmail').style.borderColor = '';
+  errorEl.style.display = 'none';
+
+  if (!firstName) {
+    document.getElementById('signupFirstName').style.borderColor = 'var(--red)';
+    valid = false;
+  }
+  if (!email || !email.includes('@') || email.indexOf('@') === 0 || email.endsWith('@')) {
+    document.getElementById('signupEmail').style.borderColor = 'var(--red)';
+    valid = false;
+  }
+  if (!valid) return;
+
+  const btn = document.getElementById('signupBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+
+  await postToSheet({ type: 'signup', firstName, email, zip: lastZip });
+
+  document.getElementById('signupForm').style.display = 'none';
+  document.getElementById('signupSuccess').style.display = 'block';
+}
+
+async function joinWaitlist() {
   const firstName = document.getElementById('waitlistFirstName').value.trim();
   const email = document.getElementById('waitlistEmail').value.trim();
   let valid = true;
@@ -1534,7 +1600,8 @@ function joinWaitlist() {
 
   if (!valid) return;
 
-  // Placeholder — would POST { firstName, email, zip: lastZip } to backend in production
+  await postToSheet({ type: 'waitlist', firstName, email, zip: lastZip });
+
   document.getElementById('waitlistForm').style.display = 'none';
   document.getElementById('waitlistConfirm').style.display = 'block';
 }
