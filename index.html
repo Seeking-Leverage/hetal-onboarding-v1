@@ -1081,16 +1081,6 @@
       <button class="yn-btn yes" onclick="handleYesNo('yes')">Yes</button>
     </div>
 
-<!-- Free-form input — shown after qualification -->
-    <div class="chat-input-row" id="chatInputRow" style="display:none;">
-      <textarea class="chat-text-input" id="chatInput" rows="1" placeholder="Ask any other questions…"
-        onkeydown="handleChatKey(event)" oninput="autoResizeChat(this)"></textarea>
-      <button class="chat-send" id="chatSendBtn" onclick="sendChatMessage()">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-          <path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/>
-        </svg>
-      </button>
-    </div>
   </div>
 
   <!-- ════════════════════════════════════════════
@@ -1468,7 +1458,6 @@ async function handleYesNo(answer) {
       qualificationDone = true;
       freeChat = true;
       document.getElementById('ynButtons').style.display = 'none';
-      document.getElementById('chatInputRow').style.display = 'flex';
       showTyping();
       setTimeout(() => {
         removeTyping();
@@ -1522,63 +1511,6 @@ function askSuggestedQuestion(btn, question) {
   runFreeChat(question);
 }
 
-// ── Free-form text input ──
-async function sendChatMessage() {
-  const input = document.getElementById('chatInput');
-  const text = input.value.trim();
-  if (!text || chatLoading) return;
-  input.value = '';
-  autoResizeChat(input);
-  appendUserBubble(text);
-  await runFreeChat(text);
-}
-
-async function runFreeChat(text) {
-  chatLoading = true;
-  document.getElementById('chatSendBtn').disabled = true;
-  chatHistory.push({ role: 'user', content: text });
-  showTyping();
-
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 8000);
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      signal: controller.signal,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 800,
-        system: FAQ_SYSTEM,
-        messages: chatHistory,
-      })
-    });
-    clearTimeout(timer);
-    const data = await res.json();
-    const reply = data.content?.[0]?.text || "Great question — reach out to us after downloading the app for more details!";
-    removeTyping();
-    chatHistory.push({ role: 'assistant', content: reply });
-    appendBotBubble(reply);
-  } catch(e) {
-    removeTyping();
-    const msg = e.name === 'AbortError'
-      ? "That took too long — please try again!"
-      : "Something went wrong — please try again!";
-    appendBotBubble(msg);
-  }
-
-  chatLoading = false;
-  document.getElementById('chatSendBtn').disabled = false;
-}
-
-function handleChatKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatMessage(); }
-}
-
-function autoResizeChat(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 80) + 'px';
-}
 
 // ── WAITLIST ───────────────────────────────────────────────────────────────
 function joinWaitlist() {
