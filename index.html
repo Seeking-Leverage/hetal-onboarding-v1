@@ -10,23 +10,23 @@
 
     :root {
       /* ── Hetal Retail Brand Palette ── */
-      /* #eaeaea · #26417b · #495e90 · #6c7ca6 · #909abc */
+      /* #fffcf2 · #eaeaea · #26417b · #495e90 · #6c7ca6 · #909abc */
 
-      --bg:       #0e1a38;   /* brand-hue dark background */
-      --surface:  #162348;   /* brand-hue mid-dark surface */
-      --card:     #1e2f5c;   /* brand-hue card */
-      --border:   #26417b;   /* brand dark navy */
+      --bg:       #fffcf2;   /* off-white background */
+      --surface:  #f2eee4;   /* warm light surface */
+      --card:     #eaeaea;   /* brand off-white card */
+      --border:   #c8d0e0;   /* soft blue-tinted border */
       --amber:    #495e90;   /* brand medium blue */
       --amber-dim:#26417b;   /* brand dark navy */
-      --amber-bg: #162348;   /* brand-hue tinted bg */
+      --amber-bg: #e8ecf5;   /* light blue highlight */
       --green:    #6c7ca6;   /* brand medium-light */
-      --green-bg: #162348;   /* brand-hue tinted bg */
+      --green-bg: #e8ecf5;   /* light blue highlight */
       --red:      #c0392b;
-      --red-bg:   #1e0c0a;
+      --red-bg:   #fce8e6;   /* light red */
       --blue:     #909abc;   /* brand light blue */
-      --text:     #eaeaea;   /* brand off-white */
+      --text:     #26417b;   /* brand dark navy = primary text */
       --muted:    #6c7ca6;   /* brand medium-light */
-      --soft:     #909abc;   /* brand light blue */
+      --soft:     #495e90;   /* brand medium blue */
     }
 
     html, body {
@@ -948,7 +948,7 @@
       <h1 class="display">Get paid to film <em>store shelves.</em></h1>
       <p class="hook-sub">Flexible gig work. No deliveries. No purchases. Just film aisles at nearby stores and earn — on your own schedule.</p>
       <button class="btn-primary" onclick="goTo(2)">See if I qualify →</button>
-      <p class="footer-note" style="padding:12px 0 0; color: #555">Takes 2 minutes · No commitment</p>
+      <p class="footer-note" style="padding:12px 0 0; color: #6c7ca6">Takes 2 minutes · No commitment</p>
     </div>
   </div>
 
@@ -1084,7 +1084,7 @@
   ════════════════════════════════════════════ -->
   <div class="screen" id="screen6">
     <div class="success-inner">
-      <div class="success-icon" style="background:linear-gradient(135deg,#132044,#26417b);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.08em;color:#909abc;">HR</div>
+      <div class="success-icon" style="background:linear-gradient(135deg,#495e90,#26417b);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.08em;color:#eaeaea;">HR</div>
       <h2 class="success-title">You're in.<br>Let's get started.</h2>
       <p class="success-sub">You're a great fit for Hetal. Download the app, claim your first assignment, and get paid.</p>
 
@@ -1410,7 +1410,7 @@ function appendUserBubble(text) {
 function appendDownloadBanner() {
   const area = document.getElementById('chatMessages');
   const div = document.createElement('div');
-  div.style.cssText = 'align-self:stretch;background:linear-gradient(135deg,#132044,#26417b);border-radius:16px;padding:20px;margin:8px 0;text-align:center;';
+  div.style.cssText = 'align-self:stretch;background:linear-gradient(135deg,#495e90,#26417b);border-radius:16px;padding:20px;margin:8px 0;text-align:center;';
   div.innerHTML = `
     <div style="font-size:22px;margin-bottom:8px;">🎉</div>
     <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;color:#eaeaea;margin-bottom:6px;">Fantastic! You're qualified to become a Hetalite.</div>
