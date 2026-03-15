@@ -9,21 +9,24 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #08112A;
-      --surface:  #0e1e3d;
-      --card:     #132044;
-      --border:   #1e3060;
-      --amber:    #495e90;
-      --amber-dim:#26417b;
-      --amber-bg: #0e1a35;
-      --green:    #6c7ca6;
-      --green-bg: #0e1a35;
+      /* ── Hetal Retail Brand Palette ── */
+      /* #fffcf2 · #eaeaea · #26417b · #495e90 · #6c7ca6 · #909abc */
+
+      --bg:       #fffcf2;   /* off-white background */
+      --surface:  #f2eee4;   /* warm light surface */
+      --card:     #eaeaea;   /* brand off-white card */
+      --border:   #c8d0e0;   /* soft blue-tinted border */
+      --amber:    #495e90;   /* brand medium blue */
+      --amber-dim:#26417b;   /* brand dark navy */
+      --amber-bg: #e8ecf5;   /* light blue highlight */
+      --green:    #6c7ca6;   /* brand medium-light */
+      --green-bg: #e8ecf5;   /* light blue highlight */
       --red:      #c0392b;
-      --red-bg:   #1e0c0a;
-      --blue:     #909abc;
-      --text:     #eaeaea;
-      --muted:    #6c7ca6;
-      --soft:     #909abc;
+      --red-bg:   #fce8e6;   /* light red */
+      --blue:     #909abc;   /* brand light blue */
+      --text:     #26417b;   /* brand dark navy = primary text */
+      --muted:    #6c7ca6;   /* brand medium-light */
+      --soft:     #495e90;   /* brand medium blue */
     }
 
     html, body {
@@ -56,7 +59,7 @@
 
     .progress-fill {
       height: 100%;
-      background: #495e90;
+      background: var(--amber);
       transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       border-radius: 0 2px 2px 0;
     }
@@ -132,7 +135,7 @@
       align-items: center;
       justify-content: center;
       font-size: 100px;
-      filter: drop-shadow(0 20px 60px rgba(245,166,35,0.2));
+      filter: drop-shadow(0 20px 60px rgba(73,94,144,0.3));
     }
 
     .store-grid {
@@ -176,9 +179,9 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: #0e1a35;
-      border: 1px solid #26417b;
-      color: #909abc;
+      background: var(--amber-bg);
+      border: 1px solid var(--border);
+      color: var(--soft);
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.1em;
@@ -191,7 +194,7 @@
     .badge-dot {
       width: 6px; height: 6px;
       border-radius: 50%;
-      background: #909abc;
+      background: var(--soft);
       animation: pulse 2s infinite;
     }
 
@@ -225,8 +228,8 @@
     .btn-primary {
       display: block;
       width: 100%;
-      background: #26417b;
-      color: #eaeaea;
+      background: var(--amber-dim);
+      color: var(--text);
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 16px;
       font-weight: 700;
@@ -331,9 +334,9 @@
     .step-num {
       width: 36px; height: 36px;
       border-radius: 10px;
-      background: #0e1a35;
-      border: 1px solid #26417b;
-      color: #909abc;
+      background: var(--amber-bg);
+      border: 1px solid var(--border);
+      color: var(--soft);
       font-size: 16px;
       font-weight: 700;
       display: flex;
@@ -357,8 +360,8 @@
     }
 
     .earnings-card {
-      background: #0e1a35;
-      border: 1px solid #26417b;
+      background: var(--amber-bg);
+      border: 1px solid var(--border);
       border-radius: 16px;
       padding: 18px 20px;
       margin-bottom: 24px;
@@ -373,12 +376,12 @@
       display: block;
       font-size: 20px;
       font-weight: 700;
-      color: #909abc;
+      color: var(--soft);
     }
 
     .earnings-text span {
       font-size: 13px;
-      color: #495e90;
+      color: var(--amber);
     }
 
     /* ── HURDLE SCREENS ── */
@@ -419,7 +422,7 @@
     }
 
     .text-input:focus {
-      border-color: #495e90;
+      border-color: var(--amber);
       box-shadow: 0 0 0 3px rgba(73,94,144,0.15);
     }
 
@@ -449,14 +452,14 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .result-pass {
-      background: #0e1a35;
-      border: 1px solid #495e90;
+      background: var(--amber-bg);
+      border: 1px solid var(--amber);
       border-radius: 14px;
       padding: 16px 18px;
       display: flex;
       align-items: center;
       gap: 12px;
-      color: #909abc;
+      color: var(--soft);
       font-size: 15px;
       font-weight: 600;
     }
@@ -507,7 +510,7 @@
 
     .chat-info span {
       font-size: 12px;
-      color: #909abc;
+      color: var(--soft);
       font-weight: 500;
     }
 
@@ -539,8 +542,8 @@
     }
 
     .chat-bubble.user {
-      background: #26417b;
-      color: #eaeaea;
+      background: var(--amber-dim);
+      color: var(--text);
       border-bottom-right-radius: 4px;
       align-self: flex-end;
       font-weight: 500;
@@ -594,8 +597,8 @@
     }
 
     .quick-reply:hover {
-      border-color: #495e90;
-      color: #909abc;
+      border-color: var(--amber);
+      color: var(--soft);
     }
 
     .chat-input-row {
@@ -627,7 +630,7 @@
     .chat-send {
       width: 42px; height: 42px;
       border-radius: 12px;
-      background: #26417b;
+      background: var(--amber-dim);
       border: none;
       cursor: pointer;
       display: flex;
@@ -636,7 +639,7 @@
       flex-shrink: 0;
       align-self: flex-end;
       transition: all 0.2s;
-      color: #eaeaea;
+      color: var(--text);
     }
 
     .chat-send:hover { filter: brightness(1.1); }
@@ -676,12 +679,12 @@
     }
 
     .yn-btn.yes {
-      background: #26417b;
-      border-color: #495e90;
-      color: #eaeaea;
+      background: var(--amber-dim);
+      border-color: var(--amber);
+      color: var(--text);
     }
 
-    .yn-btn.yes:hover { background: #495e90; }
+    .yn-btn.yes:hover { background: var(--amber); }
 
     .yn-btn.no {
       background: transparent;
@@ -713,7 +716,7 @@
     .suggested-q {
       background: var(--card);
       border: 1px solid var(--border);
-      color: #909abc;
+      color: var(--soft);
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 13px;
       font-weight: 500;
@@ -724,7 +727,7 @@
       transition: all 0.18s;
     }
 
-    .suggested-q:hover { border-color: #495e90; color: #eaeaea; }
+    .suggested-q:hover { border-color: var(--amber); color: var(--text); }
 
     /* ── SCREEN 6: SUCCESS ── */
     #screen6 {
@@ -847,7 +850,7 @@
       margin-bottom: 14px;
     }
 
-    .email-input:focus { border-color: var(--amber); box-shadow: 0 0 0 3px rgba(245,166,35,0.12); }
+    .email-input:focus { border-color: var(--amber); box-shadow: 0 0 0 3px rgba(73,94,144,0.15); }
     .email-input::placeholder { color: var(--muted); }
 
     /* ── TAPPABLE STEPS ── */
@@ -863,20 +866,20 @@
     }
 
     .tappable-step.confirmed {
-      border-color: #2ECC71;
-      background: #0a2018;
+      border-color: var(--soft);
+      background: var(--surface);
     }
 
     .tappable-step.confirmed .step-num {
-      background: #2ECC71;
-      border-color: #2ECC71;
-      color: #0a2018;
+      background: var(--amber);
+      border-color: var(--soft);
+      color: var(--text);
       font-size: 18px;
       transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .tappable-step.confirmed .step-tap-hint {
-      color: #2ECC71;
+      color: var(--soft);
     }
 
     .step-tap-hint {
@@ -939,13 +942,35 @@
         <div class="store-tile"></div><div class="store-tile"></div><div class="store-tile"></div>
       </div>
     </div>
-    <div class="store-visual" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:36px;font-weight:700;letter-spacing:0.15em;color:#909abc;text-shadow:0 20px 60px rgba(73,94,144,0.4);">HETAL RETAIL</div>
+    <div class="store-visual">
+      <svg viewBox="0 0 465 85" xmlns="http://www.w3.org/2000/svg" style="width:220px;max-width:80%;display:block;filter:drop-shadow(0 12px 40px rgba(73,94,144,0.25))">
+        <!-- H -->
+        <rect x="0"   y="0"  width="5" height="85" fill="#495e90"/>
+        <rect x="67"  y="0"  width="5" height="85" fill="#495e90"/>
+        <rect x="0"   y="40" width="72" height="5"  fill="#495e90"/>
+        <!-- E  (bars graduate through brand palette) -->
+        <rect x="102" y="0"  width="5"  height="85" fill="#495e90"/>
+        <rect x="102" y="0"  width="58" height="5"  fill="#495e90"/>
+        <rect x="102" y="40" width="42" height="5"  fill="#6c7ca6"/>
+        <rect x="102" y="80" width="58" height="5"  fill="#909abc"/>
+        <!-- T -->
+        <rect x="192" y="0"  width="70" height="5"  fill="#495e90"/>
+        <rect x="225" y="0"  width="5"  height="85" fill="#495e90"/>
+        <!-- A -->
+        <polygon points="292,85 298,85 328,0 322,0" fill="#495e90"/>
+        <polygon points="362,85 356,85 328,0 322,0" fill="#495e90"/>
+        <rect x="308" y="40" width="38" height="5"  fill="#495e90"/>
+        <!-- L -->
+        <rect x="395" y="0"  width="5"  height="85" fill="#495e90"/>
+        <rect x="395" y="80" width="70" height="5"  fill="#495e90"/>
+      </svg>
+    </div>
     <div class="hook-content">
       <div class="badge"><div class="badge-dot"></div> Now hiring in your area</div>
       <h1 class="display">Get paid to film <em>store shelves.</em></h1>
       <p class="hook-sub">Flexible gig work. No deliveries. No purchases. Just film aisles at nearby stores and earn — on your own schedule.</p>
       <button class="btn-primary" onclick="goTo(2)">See if I qualify →</button>
-      <p class="footer-note" style="padding:12px 0 0; color: #555">Takes 2 minutes · No commitment</p>
+      <p class="footer-note" style="padding:12px 0 0; color: #6c7ca6">Takes 2 minutes · No commitment</p>
     </div>
   </div>
 
@@ -1056,6 +1081,24 @@
       <button class="yn-btn yes" onclick="handleYesNo('yes')">Yes</button>
     </div>
 
+    <!-- Suggested questions — shown after qualification -->
+    <div class="suggested-qs" id="suggestedQuestions" style="display:none;">
+      <p class="suggested-qs-label">Common questions</p>
+      <button class="suggested-q" onclick="askSuggestedQuestion(this, 'When do I get paid?')">When do I get paid?</button>
+      <button class="suggested-q" onclick="askSuggestedQuestion(this, 'What stores will I visit?')">What stores will I visit?</button>
+      <button class="suggested-q" onclick="askSuggestedQuestion(this, 'How do I record videos properly?')">How do I record videos properly?</button>
+    </div>
+
+    <!-- Free-form input — shown after qualification -->
+    <div class="chat-input-row" id="chatInputRow" style="display:none;">
+      <textarea class="chat-text-input" id="chatInput" rows="1" placeholder="Ask any other questions…"
+        onkeydown="handleChatKey(event)" oninput="autoResizeChat(this)"></textarea>
+      <button class="chat-send" id="chatSendBtn" onclick="sendChatMessage()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/>
+        </svg>
+      </button>
+    </div>
   </div>
 
   <!-- ════════════════════════════════════════════
@@ -1063,7 +1106,7 @@
   ════════════════════════════════════════════ -->
   <div class="screen" id="screen6">
     <div class="success-inner">
-      <div class="success-icon" style="background:linear-gradient(135deg,#132044,#26417b);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.08em;color:#909abc;">HR</div>
+      <div class="success-icon" style="background:linear-gradient(135deg,#495e90,#26417b);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.08em;color:#eaeaea;">HR</div>
       <h2 class="success-title">You're in.<br>Let's get started.</h2>
       <p class="success-sub">You're a great fit for Hetal. Download the app, claim your first assignment, and get paid.</p>
 
@@ -1389,7 +1432,7 @@ function appendUserBubble(text) {
 function appendDownloadBanner() {
   const area = document.getElementById('chatMessages');
   const div = document.createElement('div');
-  div.style.cssText = 'align-self:stretch;background:linear-gradient(135deg,#132044,#26417b);border-radius:16px;padding:20px;margin:8px 0;text-align:center;';
+  div.style.cssText = 'align-self:stretch;background:linear-gradient(135deg,#495e90,#26417b);border-radius:16px;padding:20px;margin:8px 0;text-align:center;';
   div.innerHTML = `
     <div style="font-size:22px;margin-bottom:8px;">🎉</div>
     <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;color:#eaeaea;margin-bottom:6px;">Fantastic! You're qualified to become a Hetalite.</div>
@@ -1433,12 +1476,14 @@ async function handleYesNo(answer) {
       qualificationDone = true;
       freeChat = true;
       document.getElementById('ynButtons').style.display = 'none';
+      document.getElementById('suggestedQuestions').style.display = 'flex';
+      document.getElementById('chatInputRow').style.display = 'flex';
       showTyping();
       setTimeout(() => {
         removeTyping();
         appendDownloadBanner();
         setTimeout(() => {
-          appendBotBubble("You can download the app above to get started 👆\n\nFor any additional question, please send an email to support@hetalretail.com.");
+          appendBotBubble("You can download the app above to get started 👆\n\nOr if you have any other questions, feel free to ask them here — I'm happy to help!");
         }, 600);
       }, 800);
     }
