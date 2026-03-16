@@ -1547,6 +1547,18 @@ function askSuggestedQuestion(btn, question) {
 
 
 // ── WAITLIST ───────────────────────────────────────────────────────────────
+async function postToFormspree(payload) {
+  try {
+    await fetch('https://formspree.io/f/xwvrreno', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch (e) {
+    // silent — don't block UI on formspree errors
+  }
+}
+
 async function postToSheet(payload) {
   if (!SHEET_URL || SHEET_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') return;
   try {
@@ -1585,6 +1597,7 @@ async function submitSignup() {
   btn.disabled = true;
   btn.textContent = 'Saving…';
 
+  await postToFormspree({ type: 'signup', firstName, email, zip: lastZip });
   await postToSheet({ type: 'signup', firstName, email, zip: lastZip });
 
   document.getElementById('signupForm').style.display = 'none';
@@ -1612,6 +1625,7 @@ async function joinWaitlist() {
 
   if (!valid) return;
 
+  await postToFormspree({ type: 'waitlist', firstName, email, zip: lastZip });
   await postToSheet({ type: 'waitlist', firstName, email, zip: lastZip });
   fbq('track', 'Lead', {content_name: 'waitlist_signup'});
 
