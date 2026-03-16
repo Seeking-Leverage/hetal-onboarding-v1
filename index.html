@@ -1599,7 +1599,6 @@ async function submitSignup() {
 
   await postToFormspree({ type: 'signup', firstName, email, zip: lastZip });
   await postToSheet({ type: 'signup', firstName, email, zip: lastZip });
-  fbq('track', 'Lead', {content_name: 'signup'});
 
   document.getElementById('signupForm').style.display = 'none';
   document.getElementById('signupSuccess').style.display = 'block';
