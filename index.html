@@ -1620,6 +1620,11 @@ async function submitSignup() {
   await postToFormspree({ type: 'signup', firstName, email, zip: lastZip, mjh_clickid: mjhClickid, mjh_subid: mjhSubid });
   await postToSheet({ type: 'signup', firstName, email, zip: lastZip, mjh_clickid: mjhClickid, mjh_subid: mjhSubid });
 
+  // Fire MyJobHelper conversion pixel
+  if (mjhClickid) {
+    new Image().src = 'https://jobresults.myjobhelper.com/servlet/track?clickid=' + encodeURIComponent(mjhClickid);
+  }
+
   document.getElementById('signupForm').style.display = 'none';
   document.getElementById('signupSuccess').style.display = 'block';
 }
@@ -1650,6 +1655,11 @@ async function joinWaitlist() {
   await postToFormspree({ type: 'waitlist', firstName, email, zip: lastZip, mjh_clickid: mjhClickid, mjh_subid: mjhSubid });
   await postToSheet({ type: 'waitlist', firstName, email, zip: lastZip, mjh_clickid: mjhClickid, mjh_subid: mjhSubid });
   fbq('track', 'Lead', {content_name: 'waitlist_signup'});
+
+  // Fire MyJobHelper conversion pixel
+  if (mjhClickid) {
+    new Image().src = 'https://jobresults.myjobhelper.com/servlet/track?clickid=' + encodeURIComponent(mjhClickid);
+  }
 
   document.getElementById('waitlistForm').style.display = 'none';
   document.getElementById('waitlistConfirm').style.display = 'block';
