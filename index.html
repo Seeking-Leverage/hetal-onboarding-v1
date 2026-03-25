@@ -1205,6 +1205,7 @@
 // ── GOOGLE SHEETS ENDPOINT ────────────────────────────────────────────────
 // Replace with your deployed Google Apps Script Web App URL
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw-l8TOQeZjivkdVLGub9eoaXqw-mtz_4BvIE6GUFp7ISYppyX_hhd0wRSz1kRtdW3M/exec';
+const MJH_SHEET_URL = 'https://script.google.com/macros/s/AKfycbz_JYhUxwUGyXb49y6n4CdKobAvjbjlPa6kfrM4Re3kVDmBIiwazAQZbwt0oqM_J61_/exec';
 
 // ── ACTIVE ZIP CODES (replace with your real list) ────────────────────────
 const ACTIVE_ZIPS = new Set([
@@ -1591,6 +1592,20 @@ async function postToSheet(payload) {
   }
 }
 
+async function postToMjhSheet(payload) {
+  if (!payload.mjh_clickid) return;
+  try {
+    await fetch(MJH_SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload),
+    });
+  } catch (e) {
+    // silent — don't block UI on sheet errors
+  }
+}
+
 async function submitSignup() {
   const firstName = document.getElementById('signupFirstName').value.trim();
   const email = document.getElementById('signupEmail').value.trim();
@@ -1619,6 +1634,7 @@ async function submitSignup() {
   var mjhSubid = sessionStorage.getItem('mjh_subid') || '';
   await postToFormspree({ type: 'signup', firstName, email, zip: lastZip, mjh_clickid: mjhClickid, mjh_subid: mjhSubid });
   await postToSheet({ type: 'signup', firstName, email, zip: lastZip, mjh_clickid: mjhClickid, mjh_subid: mjhSubid });
+  await postToMjhSheet({ type: 'signup', firstName, email, zip: lastZip, mjh_clickid: mjhClickid, mjh_subid: mjhSubid });
 
   // Fire MyJobHelper conversion pixel
   if (mjhClickid) {
@@ -1654,6 +1670,7 @@ async function joinWaitlist() {
   var mjhSubid = sessionStorage.getItem('mjh_subid') || '';
   await postToFormspree({ type: 'waitlist', firstName, email, zip: lastZip, mjh_clickid: mjhClickid, mjh_subid: mjhSubid });
   await postToSheet({ type: 'waitlist', firstName, email, zip: lastZip, mjh_clickid: mjhClickid, mjh_subid: mjhSubid });
+  await postToMjhSheet({ type: 'waitlist', firstName, email, zip: lastZip, mjh_clickid: mjhClickid, mjh_subid: mjhSubid });
   fbq('track', 'Lead', {content_name: 'waitlist_signup'});
 
   // Fire MyJobHelper conversion pixel
