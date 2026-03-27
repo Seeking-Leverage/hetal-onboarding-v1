@@ -973,26 +973,27 @@
       </div>
     </div>
     <div class="store-visual">
-      <svg viewBox="0 0 465 85" xmlns="http://www.w3.org/2000/svg" style="width:220px;max-width:80%;display:block;filter:drop-shadow(0 12px 40px rgba(73,94,144,0.25))">
+      <svg viewBox="0 0 465 85" xmlns="http://www.w3.org/2000/svg" style="width:220px;max-width:80%;display:block;filter:drop-shadow(0 12px 40px rgba(0,48,135,0.18))">
         <!-- H -->
-        <rect x="0"   y="0"  width="5" height="85" fill="#495e90"/>
-        <rect x="67"  y="0"  width="5" height="85" fill="#495e90"/>
-        <rect x="0"   y="40" width="72" height="5"  fill="#495e90"/>
-        <!-- E  (bars graduate through brand palette) -->
-        <rect x="102" y="0"  width="5"  height="85" fill="#495e90"/>
-        <rect x="102" y="0"  width="58" height="5"  fill="#495e90"/>
-        <rect x="102" y="40" width="42" height="5"  fill="#6c7ca6"/>
-        <rect x="102" y="80" width="58" height="5"  fill="#909abc"/>
+        <rect x="0"   y="0"  width="5" height="85" fill="#003087"/>
+        <rect x="67"  y="0"  width="5" height="85" fill="#003087"/>
+        <rect x="0"   y="35" width="72" height="4"  fill="#8BA7CC"/>
+        <rect x="0"   y="46" width="72" height="4"  fill="#8BA7CC"/>
+        <!-- E (middle + bottom bars are lighter) -->
+        <rect x="102" y="0"  width="5"  height="85" fill="#003087"/>
+        <rect x="102" y="0"  width="58" height="5"  fill="#003087"/>
+        <rect x="102" y="38" width="42" height="4"  fill="#8BA7CC"/>
+        <rect x="102" y="80" width="58" height="5"  fill="#8BA7CC"/>
         <!-- T -->
-        <rect x="192" y="0"  width="70" height="5"  fill="#495e90"/>
-        <rect x="225" y="0"  width="5"  height="85" fill="#495e90"/>
+        <rect x="192" y="0"  width="70" height="5"  fill="#003087"/>
+        <rect x="225" y="0"  width="5"  height="85" fill="#003087"/>
         <!-- A -->
-        <polygon points="292,85 298,85 328,0 322,0" fill="#495e90"/>
-        <polygon points="362,85 356,85 328,0 322,0" fill="#495e90"/>
-        <rect x="308" y="40" width="38" height="5"  fill="#495e90"/>
+        <polygon points="292,85 298,85 328,0 322,0" fill="#003087"/>
+        <polygon points="362,85 356,85 328,0 322,0" fill="#003087"/>
+        <rect x="308" y="40" width="38" height="5"  fill="#003087"/>
         <!-- L -->
-        <rect x="395" y="0"  width="5"  height="85" fill="#495e90"/>
-        <rect x="395" y="80" width="70" height="5"  fill="#495e90"/>
+        <rect x="395" y="0"  width="5"  height="85" fill="#003087"/>
+        <rect x="395" y="80" width="70" height="5"  fill="#003087"/>
       </svg>
     </div>
     <div class="hook-content">
@@ -1205,6 +1206,7 @@
 // ── GOOGLE SHEETS ENDPOINT ────────────────────────────────────────────────
 // Replace with your deployed Google Apps Script Web App URL
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw-l8TOQeZjivkdVLGub9eoaXqw-mtz_4BvIE6GUFp7ISYppyX_hhd0wRSz1kRtdW3M/exec';
+const MJH_SHEET_URL = 'https://script.google.com/macros/s/AKfycbz_JYhUxwUGyXb49y6n4CdKobAvjbjlPa6kfrM4Re3kVDmBIiwazAQZbwt0oqM_J61_/exec';
 
 // ── ACTIVE ZIP CODES (replace with your real list) ────────────────────────
 const ACTIVE_ZIPS = new Set([
@@ -1591,6 +1593,20 @@ async function postToSheet(payload) {
   }
 }
 
+async function postToMjhSheet(payload) {
+  if (!payload.mjh_clickid) return;
+  try {
+    await fetch(MJH_SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload),
+    });
+  } catch (e) {
+    // silent — don't block UI on sheet errors
+  }
+}
+
 async function submitSignup() {
   const firstName = document.getElementById('signupFirstName').value.trim();
   const email = document.getElementById('signupEmail').value.trim();
@@ -1619,6 +1635,12 @@ async function submitSignup() {
   var mjhSubid = sessionStorage.getItem('mjh_subid') || '';
   await postToFormspree({ type: 'signup', firstName, email, zip: lastZip, mjh_clickid: mjhClickid, mjh_subid: mjhSubid });
   await postToSheet({ type: 'signup', firstName, email, zip: lastZip, mjh_clickid: mjhClickid, mjh_subid: mjhSubid });
+  await postToMjhSheet({ type: 'signup', firstName, email, zip: lastZip, mjh_clickid: mjhClickid, mjh_subid: mjhSubid });
+
+  // Fire MyJobHelper conversion pixel
+  if (mjhClickid) {
+    new Image().src = 'https://jobresults.myjobhelper.com/servlet/track?clickid=' + encodeURIComponent(mjhClickid);
+  }
 
   document.getElementById('signupForm').style.display = 'none';
   document.getElementById('signupSuccess').style.display = 'block';
@@ -1649,7 +1671,13 @@ async function joinWaitlist() {
   var mjhSubid = sessionStorage.getItem('mjh_subid') || '';
   await postToFormspree({ type: 'waitlist', firstName, email, zip: lastZip, mjh_clickid: mjhClickid, mjh_subid: mjhSubid });
   await postToSheet({ type: 'waitlist', firstName, email, zip: lastZip, mjh_clickid: mjhClickid, mjh_subid: mjhSubid });
+  await postToMjhSheet({ type: 'waitlist', firstName, email, zip: lastZip, mjh_clickid: mjhClickid, mjh_subid: mjhSubid });
   fbq('track', 'Lead', {content_name: 'waitlist_signup'});
+
+  // Fire MyJobHelper conversion pixel
+  if (mjhClickid) {
+    new Image().src = 'https://jobresults.myjobhelper.com/servlet/track?clickid=' + encodeURIComponent(mjhClickid);
+  }
 
   document.getElementById('waitlistForm').style.display = 'none';
   document.getElementById('waitlistConfirm').style.display = 'block';
