@@ -1458,7 +1458,7 @@ function appendDownloadBanner() {
     <div style="font-size:22px;margin-bottom:8px;">🎉</div>
     <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;color:#eaeaea;margin-bottom:6px;">Fantastic! You're qualified to become a Hetalite.</div>
     <div style="font-size:13px;color:#909abc;margin-bottom:16px;">We'd love for you to download the app and create your account.</div>
-    <a href="https://hetalretail.onelink.me/sfUI/7wytu71w" target="_blank" onclick="fbq('track', 'Lead', {content_name: 'app_download_click'})" style="display:inline-block;background:#495e90;color:#eaeaea;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;padding:12px 28px;border-radius:100px;text-decoration:none;letter-spacing:0.02em;">Download Hetal Retail →</a>
+    <a href="https://hetalretail.onelink.me/sfUI/7wytu71w" target="_blank" onclick="fbq('track', 'Lead', {content_name: 'app_download_click'}); window.parent.postMessage({ event: 'hetal_lead', type: 'download', email: '', mjh_clickid: sessionStorage.getItem('mjh_clickid') || '' }, '*');" style="display:inline-block;background:#495e90;color:#eaeaea;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;padding:12px 28px;border-radius:100px;text-decoration:none;letter-spacing:0.02em;">Download Hetal Retail →</a>
   `;
   area.appendChild(div);
   scrollChat();
