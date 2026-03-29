@@ -35,6 +35,12 @@
   </script>
   <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1570763517329516&ev=PageView&noscript=1"/></noscript>
   <!-- End Meta Pixel -->
+
+  <!-- Reddit Pixel -->
+  <script>
+  !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js?pixel_id=a2_io14fe5dvrn5",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_io14fe5dvrn5');rdt('track', 'PageVisit');
+  </script>
+  <!-- End Reddit Pixel -->
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1621,6 +1627,10 @@ async function submitSignup() {
     new Image().src = 'https://jobresults.myjobhelper.com/servlet/track?clickid=' + encodeURIComponent(mjhClickid);
   }
 
+  // Reddit Lead event with advanced matching
+  rdt('init', 'a2_io14fe5dvrn5', { email: email });
+  rdt('track', 'Lead');
+
   document.getElementById('signupForm').style.display = 'none';
   document.getElementById('signupSuccess').style.display = 'block';
 }
@@ -1657,6 +1667,10 @@ async function joinWaitlist() {
   if (mjhClickid) {
     new Image().src = 'https://jobresults.myjobhelper.com/servlet/track?clickid=' + encodeURIComponent(mjhClickid);
   }
+
+  // Reddit Lead event with advanced matching
+  rdt('init', 'a2_io14fe5dvrn5', { email: email });
+  rdt('track', 'Lead');
 
   document.getElementById('waitlistForm').style.display = 'none';
   document.getElementById('waitlistConfirm').style.display = 'block';
