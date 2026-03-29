@@ -1631,6 +1631,9 @@ async function submitSignup() {
   rdt('init', 'a2_io14fe5dvrn5', { email: email });
   rdt('track', 'Lead');
 
+  // Notify parent page (Webflow) for pixel firing
+  window.parent.postMessage({ event: 'hetal_lead', type: 'signup', email: email, mjh_clickid: mjhClickid }, '*');
+
   document.getElementById('signupForm').style.display = 'none';
   document.getElementById('signupSuccess').style.display = 'block';
 }
@@ -1671,6 +1674,9 @@ async function joinWaitlist() {
   // Reddit Lead event with advanced matching
   rdt('init', 'a2_io14fe5dvrn5', { email: email });
   rdt('track', 'Lead');
+
+  // Notify parent page (Webflow) for pixel firing
+  window.parent.postMessage({ event: 'hetal_lead', type: 'waitlist', email: email, mjh_clickid: mjhClickid }, '*');
 
   document.getElementById('waitlistForm').style.display = 'none';
   document.getElementById('waitlistConfirm').style.display = 'block';
