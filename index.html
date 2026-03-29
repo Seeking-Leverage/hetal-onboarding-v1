@@ -1622,18 +1622,6 @@ async function submitSignup() {
   await postToSheet({ type: 'signup', firstName, email, zip: lastZip, mjh_clickid: mjhClickid, mjh_subid: mjhSubid });
   await postToMjhSheet({ type: 'signup', firstName, email, zip: lastZip, mjh_clickid: mjhClickid, mjh_subid: mjhSubid });
 
-  // Fire MyJobHelper conversion pixel
-  if (mjhClickid) {
-    new Image().src = 'https://jobresults.myjobhelper.com/servlet/track?clickid=' + encodeURIComponent(mjhClickid);
-  }
-
-  // Reddit Lead event with advanced matching
-  rdt('init', 'a2_io14fe5dvrn5', { email: email });
-  rdt('track', 'Lead');
-
-  // Notify parent page (Webflow) for pixel firing
-  window.parent.postMessage({ event: 'hetal_lead', type: 'signup', email: email, mjh_clickid: mjhClickid }, '*');
-
   document.getElementById('signupForm').style.display = 'none';
   document.getElementById('signupSuccess').style.display = 'block';
 }
